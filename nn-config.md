@@ -19,31 +19,29 @@ One node containing:
 
 ## Now
 
---> obj
-        live()
-            move() 
+- obj
+  - live()
+  - move() 
 
---> critter
-        super.live ()
-        *think ()*
-        *act()*
-        eat food
-        expend energy on bodily functions
-        die if too small
+- critter
+  - super.live ()
+  - *think ()*
+  - *act()*
+  - eat food
+  - expend energy on bodily functions
+  - die if too small
 
 ## Then
 
-think()
-    collect inputs
-    activate network
-    record output
+- think()
+  - collect inputs
+  - activate network
+  - record output
 
-act()
-    interpret output
-        pulse
-        split
-        turn
-
-    decide if the action is not limited by the physique of the fish
-
-    do action
+- act() - *done*
+  - interpret output
+    - pulse?
+    - split?
+    - turn?
+  - decide if the action is not limited by the physique of the fish
+  - do action
