@@ -1,19 +1,22 @@
 class Critter extends Obj {
 
-    constructor(x, y, brain) {
+    constructor(x, y, brainIndex) {
         super(x, y);
-        this.size = random() * 40;
+        this.size = 20;
         this.movement = p5.Vector.mult(p5.Vector.random2D(), random() * 3);
         this.eatenTimer = 0;
         this.thought = 0;
 
-        this.brain = brain;
+        this.brainIndex = brainIndex;
+        this.brain = neat.population[brainIndex];
     }
 
     draw() {
-        if (this.eatenTimer <= 0) fill('red');
-        else fill('green');
-        super.draw();
+  //      if (this.eatenTimer <= 0) 
+            fill(color (this.brainIndex * 10, 50, 50));
+/*        else
+            fill('green');
+ */       super.draw();
     }
 
     live() {
@@ -32,7 +35,7 @@ class Critter extends Obj {
 
         if (this.eatenTimer < 50) {
             for (var i = 0; i < objs.length; i++) {
-                if (objs[i] && objs[i].constructor.name == "Food") {
+                if (objs[i] && objs[i].constructor.name == "Food" && this.eatenTimer < 50) {
                     var distance = p5.Vector.dist(this.position, objs[i].getPosition());
                     if ((this != objs[i]) && (distance < this.size + objs[i].getSize())) {
                         this.eatenTimer += objs[i].getSize() * 1;
@@ -45,6 +48,9 @@ class Critter extends Obj {
 
         //expend energy on ambient bodily functions
         this.size *= 0.999;
+
+        // add my size to the corresponding brain statistics
+        maxTotalFishSize[this.brainIndex][0] += this.size;
 
         //die if too small
         if (this.size < 5) {
@@ -63,7 +69,7 @@ class Critter extends Obj {
         
             // inverting foodDensity as a means of normalisation
             
-            foodDensity[round(this.getPosition().x / 10) * ((width / 10 >> 0) + 1) + round(this.getPosition().y / 10)] / 100,
+            foodDensity[round(this.getPosition().y / 10) * ((width / 10 >> 0) + 1) + round(this.getPosition().x / 10)] / 100,
 
             // normalisation of speed 
 
@@ -93,7 +99,7 @@ class Critter extends Obj {
 
         if ((this.size > 20) && (this.thought == 2)) {
             this.size /= 2;
-            var critter = new Critter (0, 0, this.brain); // !!!! very dumb brain split implementation
+            var critter = new Critter (0, 0, this.brainIndex);
             var v = p5.Vector.random2D();
             v.mult(2);
             critter.setPosition(this.position);
