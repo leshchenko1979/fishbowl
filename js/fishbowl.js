@@ -1,8 +1,26 @@
+/** Rename vars */
+var Neat    = neataptic.Neat;
+var Methods = neataptic.Methods;
+var Config  = neataptic.Config;
+var Architect = neataptic.Architect;
+
+// declare fishbowl vars
+
 var foods = [];
 var critters = [];
 var objs = [];
 var foodDensity = [];
 var stats = [];
+var neat;
+
+// GA settings
+var INITIAL_PLAYER_AMOUNT     = 10;
+var ITERATIONS        = 1000;
+var MUTATION_RATE     = 0.3;
+var ELITISM_PERCENT   = 0.1;
+
+// Trained population
+var USE_TRAINED_POP = true;
 
 function mouseClicked() {
     for (var i = 0; i < objs.length; i++) {
@@ -15,13 +33,15 @@ function setup() {
     createCanvas(windowWidth - 20, windowHeight - 20);
     background(100);
 
+    initNeat();
+    
     //add objects
 
     for (var i = 0; i < 100; i++)
         objs.push(new Food(random() * width, random() * height));
 
-    for (var i = 0; i < 10; i++)
-        objs.push(new Critter(random() * width, random() * height));
+    for (var i = 0; i < INITIAL_PLAYER_AMOUNT; i++)
+        objs.push(new Critter(random() * width, random() * height, neat.population[i]));
 }
 
 function draw() {
@@ -63,8 +83,47 @@ function draw() {
         var foodMass = foods.reduce((i, el) => i + el.getSize(), 0);
         stats.push(foodMass);
     }
-    //Respawm a critter if no crittrrs left
+
+    /* Respawn disabled until evolution is figured out
+
+    //Respawn a critter if no critters left
 
     if (objs.filter(obj => obj instanceof Critter).length == 0)
         objs.push(new Critter(random() * width, random() * height));
+
+
+    */
+}
+
+function initNeat(){
+    neat = new Neat(
+      3,
+      1,
+      null,
+      {
+ /*       mutation: [
+            neataptic.methods.mutation.ADD_NODE,
+            neataptic.methods.SUB_NODE,
+            neataptic.methods.ADD_CONN,
+            neataptic.methods.SUB_CONN,
+            neataptic.methods.MOD_WEIGHT,
+            neataptic.methods.MOD_BIAS,
+            neataptic.methods.MOD_ACTIVATION,
+            neataptic.methods.ADD_GATE,
+            neataptic.methods.SUB_GATE,
+            neataptic.methods.ADD_SELF_CONN,
+            neataptic.methods.SUB_SELF_CONN,
+            neataptic.methods.ADD_BACK_CONN,
+            neataptic.methods.SUB_BACK_CONN
+          ], */
+        popsize: INITIAL_PLAYER_AMOUNT,
+        mutationRate: MUTATION_RATE,
+        elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT,
+        network: new neataptic.architect.Random(
+          3,
+          4,
+          1
+        )
+      }
+    );
 }

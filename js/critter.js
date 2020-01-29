@@ -1,21 +1,13 @@
 class Critter extends Obj {
 
-    constructor(x, y) {
+    constructor(x, y, brain) {
         super(x, y);
         this.size = random() * 40;
         this.movement = p5.Vector.mult(p5.Vector.random2D(), random() * 3);
         this.eatenTimer = 0;
         this.thought = 0;
 
-/*
-
-- 0: do nothing
-- 1: pulse
-- 2: split
-- 3: turn right
-- 4: turn left
-
-*/
+        this.brain = brain;
     }
 
     draw() {
@@ -65,36 +57,35 @@ class Critter extends Obj {
 
     think() {
 
-        this.thought = 0;
-        select: {
-            if (random() < 0.01) {
-                this.thought = 1; //pulse
-                break select;
-            }
+        // collect and normalize inputs
 
-            if (random() < 0.01) {
-                this.thought = 2; //split
-                break select;
-            }
-
-            if (random() < 0.1) {
-                this.thought = 3; // turn left
-                break select;
-            }
-
-            if (random() < 0.1) {
-                this.thought = 4; // turn right
-                break select;
-            }
-        }
+        var inputs = [
         
+            // inverting foodDensity as a means of normalisation
+            
+            foodDensity[round(this.getPosition().x / 10) * ((width / 10 >> 0) + 1) + round(this.getPosition().y / 10)] / 100,
+
+            // normalisation of speed 
+
+            this.movement.mag() / 7,
+ 
+            // inverting fish size as a means of normalisation
+
+            1 / this.size
+
+        ];
+
+        // activate brain
+
+        this.thought = Math.floor (this.brain.activate(inputs)[0] * 5);
+
     }
 
     act() {
 
         //pulse
         if ((this.thought == 1) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)){
-            this.movement.setMag(this.movement.mag() + this.size / 5);
+            this.movement.setMag(this.movement.mag() + 5);
             this.size *= 0.9;
         }
 
@@ -102,7 +93,7 @@ class Critter extends Obj {
 
         if ((this.size > 20) && (this.thought == 2)) {
             this.size /= 2;
-            var critter = new Critter();
+            var critter = new Critter (0, 0, this.brain); // !!!! very dumb brain split implementation
             var v = p5.Vector.random2D();
             v.mult(2);
             critter.setPosition(this.position);
