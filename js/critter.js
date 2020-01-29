@@ -1,27 +1,19 @@
 class Critter extends Obj {
 
-    constructor(x, y) {
+    constructor(x, y, brainIndex) {
         super(x, y);
-        this.size = random() * 40;
+        this.size = 20;
         this.movement = p5.Vector.mult(p5.Vector.random2D(), random() * 3);
         this.eatenTimer = 0;
         this.thought = 0;
 
-/*
-
-- 0: do nothing
-- 1: pulse
-- 2: split
-- 3: turn right
-- 4: turn left
-
-*/
+        this.brainIndex = brainIndex;
+        this.brain = neat.population[brainIndex];
     }
 
     draw() {
-        if (this.eatenTimer <= 0) fill('red');
-        else fill('green');
-        super.draw();
+      fill(color (this.brainIndex * 10, 50, 50));
+      super.draw();
     }
 
     live() {
@@ -40,7 +32,7 @@ class Critter extends Obj {
 
         if (this.eatenTimer < 50) {
             for (var i = 0; i < objs.length; i++) {
-                if (objs[i] && objs[i].constructor.name == "Food") {
+                if (objs[i] && objs[i] instanceOf Food && this.eatenTimer < 50) {
                     var distance = p5.Vector.dist(this.position, objs[i].getPosition());
                     if ((this != objs[i]) && (distance < this.size + objs[i].getSize())) {
                         this.eatenTimer += objs[i].getSize() * 1;
@@ -54,6 +46,9 @@ class Critter extends Obj {
         //expend energy on ambient bodily functions
         this.size *= 0.999;
 
+        // add my size to the corresponding brain statistics
+        maxTotalFishSize[this.brainIndex][0] += this.size;
+
         //die if too small
         if (this.size < 5) {
             this.delete();
@@ -65,36 +60,35 @@ class Critter extends Obj {
 
     think() {
 
-        this.thought = 0;
-        select: {
-            if (random() < 0.01) {
-                this.thought = 1; //pulse
-                break select;
-            }
+        // collect and normalize inputs
 
-            if (random() < 0.01) {
-                this.thought = 2; //split
-                break select;
-            }
-
-            if (random() < 0.1) {
-                this.thought = 3; // turn left
-                break select;
-            }
-
-            if (random() < 0.1) {
-                this.thought = 4; // turn right
-                break select;
-            }
-        }
+        var inputs = [
         
+            // inverting foodDensity as a means of normalisation
+            
+            foodDensity[round(this.getPosition().y / 10) * ((width / 10 >> 0) + 1) + round(this.getPosition().x / 10)] / 100,
+
+            // normalisation of speed 
+
+            this.movement.mag() / 7,
+ 
+            // inverting fish size as a means of normalisation
+
+            1 / this.size
+
+        ];
+
+        // activate brain
+
+        this.thought = Math.floor (this.brain.activate(inputs)[0] * 5);
+
     }
 
     act() {
 
         //pulse
         if ((this.thought == 1) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)){
-            this.movement.setMag(this.movement.mag() + this.size / 5);
+            this.movement.setMag(this.movement.mag() + 5);
             this.size *= 0.9;
         }
 
@@ -102,7 +96,7 @@ class Critter extends Obj {
 
         if ((this.size > 20) && (this.thought == 2)) {
             this.size /= 2;
-            var critter = new Critter();
+            var critter = new Critter (0, 0, this.brainIndex);
             var v = p5.Vector.random2D();
             v.mult(2);
             critter.setPosition(this.position);
