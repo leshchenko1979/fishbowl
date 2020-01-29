@@ -45,7 +45,6 @@ One node containing:
     - turn?
   - decide if the action is not limited by the physique of the fish
   - do action
-
 # Generation cycle
 
 ## Mutations only on respawn  - *done*
@@ -79,4 +78,3 @@ Size of all fishes sharing this brain after X frames + max witnessed total size 
     - can the population be produced from a single parent?
 3. wait until all fish die off
 4. go to 1
-
