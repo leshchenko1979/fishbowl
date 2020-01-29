@@ -33,7 +33,7 @@ One node containing:
 
 ## Then
 
-- think()
+- think() - *done*
   - collect inputs
   - activate network
   - record output
@@ -45,3 +45,20 @@ One node containing:
     - turn?
   - decide if the action is not limited by the physique of the fish
   - do action
+
+# Generation cycle
+
+## No mutation between generations
+
+1. spawn new generation (several fishes)
+2. when a fish splits, new fish operates the same brain as the parent
+3. wait until all fish die off
+4. go to 1
+
+## Mutations occur when fish splits
+
+?????
+
+## Fitness function
+
+Size of all fishes sharing this genome
