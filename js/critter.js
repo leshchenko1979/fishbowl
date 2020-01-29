@@ -32,7 +32,7 @@ class Critter extends Obj {
 
         if (this.eatenTimer < 50) {
             for (var i = 0; i < objs.length; i++) {
-                if (objs[i] && objs[i] instanceOf Food && this.eatenTimer < 50) {
+                if (objs[i] && (objs[i] instanceof Food) && this.eatenTimer < 50) {
                     var distance = p5.Vector.dist(this.position, objs[i].getPosition());
                     if ((this != objs[i]) && (distance < this.size + objs[i].getSize())) {
                         this.eatenTimer += objs[i].getSize() * 1;
