@@ -22,7 +22,7 @@ var ITERATIONS        = 1000;
 var MUTATION_RATE     = 0.3;
 var ELITISM_PERCENT   = 0.1;
 
-var MAX_FRAMES_PER_GENERATION = 1000;
+var MAX_FRAMES_PER_GENERATION = 100;
 var framesLeft = MAX_FRAMES_PER_GENERATION;
 
 /*
@@ -114,7 +114,7 @@ function draw() {
         
         //kill off remaining fish
 
-        objs.forEach(obj => {if (obj instanceof Critter) obj.delete();});
+        objs = [];
 
         //evaluation
         
@@ -128,6 +128,9 @@ function draw() {
             objs.push(new Critter(random() * width, random() * height, i));
         }
 
+        for (var i = 0; i < 500; i++)
+        objs.push(new Food(random() * width, random() * height));
+
         // Replace the old population with the new population
         neat.population = newpopulation;
         neat.mutate();
@@ -139,7 +142,7 @@ function draw() {
 
         //reset frame countdown
 
-        framesLeft = MAX_FRAMES_PER_GENERATION;
+        framesLeft = (MAX_FRAMES_PER_GENERATION += 10);
 
     }
 }

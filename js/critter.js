@@ -3,7 +3,7 @@ class Critter extends Obj {
     constructor(x, y, brainIndex) {
         super(x, y);
         this.size = 20;
-        this.movement = p5.Vector.mult(p5.Vector.random2D(), random() * 3);
+        this.movement = new p5.Vector;
         this.eatenTimer = 0;
         this.thought = 0;
 
@@ -98,7 +98,8 @@ class Critter extends Obj {
             this.size /= 2;
             var critter = new Critter (0, 0, this.brainIndex);
             var v = p5.Vector.random2D();
-            v.mult(2);
+            v.setMag (this.movement.mag());
+            // v.mult(2);
             critter.setPosition(this.position);
             critter.setSize(this.size);
             critter.setMovement(v);
