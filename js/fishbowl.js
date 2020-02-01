@@ -1,9 +1,3 @@
-/** Rename vars */
-var Neat    = neataptic.Neat;
-var Methods = neataptic.Methods;
-var Config  = neataptic.Config;
-var Architect = neataptic.Architect;
-
 // declare fishbowl vars
 
 var foods = [];
@@ -27,7 +21,7 @@ var framesLeft = MAX_FRAMES_PER_GENERATION;
 var SENSES = 2;
 var ACTIONS = 3;
 var maxNNsize;
-var td = Array(5);
+var td = Array(ACTIONS);
 
 
 /*
@@ -166,7 +160,7 @@ function draw() {
 
         //draw graph of the network
 
-  //      drawGraph(neat.population[0].graph(300, 300), '#viz');
+        // d3.graph(neat.population[0], '#viz');
     
 
 
@@ -174,30 +168,15 @@ function draw() {
 }
 
 function initNeat(){
-    neat = new Neat(
-      3,
+    neat = new carrot.Neat(
+      SENSES,
       1,
       null,
       {
-        mutation: [
-            neataptic.methods.mutation.ADD_NODE,
-            neataptic.methods.mutation.SUB_NODE,
-            neataptic.methods.mutation.ADD_CONN,
-            neataptic.methods.mutation.SUB_CONN,
-            neataptic.methods.mutation.MOD_WEIGHT,
-            neataptic.methods.mutation.MOD_BIAS,
-            neataptic.methods.mutation.MOD_ACTIVATION,
-            neataptic.methods.mutation.ADD_GATE,
-            neataptic.methods.mutation.SUB_GATE,
-            neataptic.methods.mutation.ADD_SELF_CONN,
-            neataptic.methods.mutation.SUB_SELF_CONN,
-            neataptic.methods.mutation.ADD_BACK_CONN,
-            neataptic.methods.mutation.SUB_BACK_CONN
-          ], 
         popsize: INITIAL_PLAYER_AMOUNT,
         mutationRate: MUTATION_RATE,
         elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT,
-        network: new neataptic.architect.Random(
+        network: new carrot.architect.Random(
           SENSES,
           SENSES + 1,
           1
