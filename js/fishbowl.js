@@ -24,6 +24,8 @@ var ELITISM_PERCENT   = 0.1;
 
 var MAX_FRAMES_PER_GENERATION = 100;
 var framesLeft = MAX_FRAMES_PER_GENERATION;
+var SENSES = 2;
+var ACTIONS = 3;
 var maxNNsize;
 var td = Array(5);
 
@@ -112,7 +114,7 @@ function draw() {
 
     var maxfitness = maxTotalFishSize.reduce ((acc, el) => Math.max(el[0]+el[1],acc), 0);
     document.getElementById("maxfitness").textContent = Math.round(maxfitness);
-    
+
     document.getElementById("maxNNsize").textContent = maxNNsize;
 
     objs.forEach (obj => {if (obj instanceof Critter) td[obj.thought]++});
@@ -123,7 +125,7 @@ function draw() {
     document.getElementById("d2").textContent = Math.round(td[2] / sumtd * 100);
     document.getElementById("d3").textContent = Math.round(td[3] / sumtd * 100);
     document.getElementById("d4").textContent = Math.round(td[4] / sumtd * 100);
-    
+
     // new generation
 
     if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 0)) {
@@ -160,7 +162,13 @@ function draw() {
        
         //reset frame countdown
 
-        framesLeft = Math.floor((maxfitness - 30) ** 2);
+        framesLeft = Math.floor(maxfitness * 10);
+
+        //draw graph of the network
+
+  //      drawGraph(neat.population[0].graph(300, 300), '#viz');
+    
+
 
     }
 }
@@ -190,8 +198,8 @@ function initNeat(){
         mutationRate: MUTATION_RATE,
         elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT,
         network: new neataptic.architect.Random(
-          3,
-          4,
+          SENSES,
+          SENSES + 1,
           1
         )
       }

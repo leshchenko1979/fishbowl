@@ -71,7 +71,7 @@ class Critter extends Obj {
         
             // inverting foodDensity as a means of normalisation
             
-            foodDensity[round(this.getPosition().y / 10) * ((width / 10 >> 0) + 1) + round(this.getPosition().x / 10)] / 100,
+            // foodDensity[round(this.getPosition().y / 10) * ((width / 10 >> 0) + 1) + round(this.getPosition().x / 10)] / 100,
 
             // normalisation of speed 
 
@@ -85,7 +85,7 @@ class Critter extends Obj {
 
         // activate brain
 
-        this.thought = Math.floor (this.brain.activate(inputs)[0] * 5);
+        this.thought = Math.floor (this.brain.activate(inputs)[0] * ACTIONS);
 
     }
 
@@ -114,7 +114,7 @@ class Critter extends Obj {
             objs.push(critter);
             this.movement = p5.Vector.mult(v, -1);
         }
-
+/*
         // turn left
 
         if (this.thought == 3) 
@@ -127,7 +127,7 @@ class Critter extends Obj {
 
             this.movement.rotate(PI / 5);
 
-
+*/
     }
 
     click(x, y) {
