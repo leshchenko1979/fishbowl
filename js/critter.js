@@ -85,7 +85,8 @@ class Critter extends Obj {
 
         // activate brain
 
-        this.thought = Math.floor (this.brain.activate(inputs)[0] * ACTIONS);
+        this.thought = Math.floor (this.brain.activate(inputs)[0] * ACTIONS) % ACTIONS;
+        if (this.thought > ACTIONS) console.log (this.thought);
 
     }
 
