@@ -12,7 +12,7 @@ class Critter extends Obj {
     }
 
     draw() {
-      fill(color (this.brainIndex * 10, 50, 50));
+      fill(color (this.brainIndex * 10, 50, 70));
       super.draw();
     }
 
@@ -35,8 +35,13 @@ class Critter extends Obj {
                 if (objs[i] && (objs[i] instanceof Food) && this.eatenTimer < 50) {
                     var distance = p5.Vector.dist(this.position, objs[i].getPosition());
                     if ((this != objs[i]) && (distance < this.size + objs[i].getSize())) {
+                        
                         this.eatenTimer += objs[i].getSize() * 1;
-                        this.size = sqrt(sq(this.size) + sq(objs[i].getSize()));
+                        
+                        // disable eating on the first frame to mess up the fitness calculation
+                        if (frameCount > 0)
+                            this.size = sqrt(sq(this.size) + sq(objs[i].getSize()));
+                        
                         objs[i].delete();
                     }
                 }
@@ -88,7 +93,10 @@ class Critter extends Obj {
 
         //pulse
         if ((this.thought == 1) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)){
-            this.movement.setMag(this.movement.mag() + 5);
+            if (this.movement.mag() == 0)
+                this.movement = p5.Vector.random2D().mult (5)
+            else
+                this.movement.setMag(this.movement.mag() + 5);
             this.size *= 0.9;
         }
 
@@ -120,7 +128,6 @@ class Critter extends Obj {
             this.movement.rotate(PI / 5);
 
 
-        this.thought = 0;
     }
 
     click(x, y) {

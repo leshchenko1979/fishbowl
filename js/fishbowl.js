@@ -24,6 +24,9 @@ var ELITISM_PERCENT   = 0.1;
 
 var MAX_FRAMES_PER_GENERATION = 100;
 var framesLeft = MAX_FRAMES_PER_GENERATION;
+var maxNNsize;
+var td = Array(5);
+
 
 /*
 function mouseClicked() {
@@ -35,11 +38,16 @@ function mouseClicked() {
 */
 
 function setup() {
-    createCanvas(windowWidth - 20, windowHeight - 20);
+    var canvas = createCanvas(windowWidth * 0.9 - 20, windowHeight - 30);
+    canvas.parent('canvas');
     background("gray");
     colorMode (HSB, 100);
 
     initNeat();
+
+    maxNNsize = neat.population.reduce ((acc, el) => Math.max (acc, el.nodes.length), 0);
+    td.fill(0);
+
     
     //add objects
 
@@ -50,6 +58,7 @@ function setup() {
         objs.push (new Critter(random() * width, random() * height, i));
         maxTotalFishSize.push ([0, 0]); // [max size of the corresponding brainIndex on this frame, max size in this iteration]
     }
+
 
 
 }
@@ -96,18 +105,25 @@ function draw() {
 
     objs = objs.filter(el => { if (el) return true; });
 
-    //collect stats
+    // display stats
 
-    if (frameCount % 100 == 0) {
-        var foods = objs.filter(el => el instanceof Food);
-        var foodMass = foods.reduce((i, el) => i + el.getSize(), 0);
-        stats.push(foodMass);
-    }
+    document.getElementById("generation").textContent=neat.generation + 1;
+    document.getElementById("frames").textContent=framesLeft;
 
-    // display generation coundown
+    var maxfitness = maxTotalFishSize.reduce ((acc, el) => Math.max(el[0]+el[1],acc), 0);
+    document.getElementById("maxfitness").textContent = Math.round(maxfitness);
+    
+    document.getElementById("maxNNsize").textContent = maxNNsize;
 
-    text (framesLeft, 10, 10);
+    objs.forEach (obj => {if (obj instanceof Critter) td[obj.thought]++});
+    var sumtd = td.reduce ((acc, el) => acc + el, 0);
 
+    document.getElementById("d0").textContent = Math.round(td[0] / sumtd * 100);
+    document.getElementById("d1").textContent = Math.round(td[1] / sumtd * 100);
+    document.getElementById("d2").textContent = Math.round(td[2] / sumtd * 100);
+    document.getElementById("d3").textContent = Math.round(td[3] / sumtd * 100);
+    document.getElementById("d4").textContent = Math.round(td[4] / sumtd * 100);
+    
     // new generation
 
     if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 0)) {
@@ -138,11 +154,13 @@ function draw() {
 
         //reset fish size stats
 
-        maxTotalFishSize.fill([0,0]);
-
+        maxNNsize = neat.population.reduce ((acc, el) => Math.max (acc, el.nodes.length), 0);
+        maxTotalFishSize.forEach (el => el = [0,0]);
+        td.fill(0);
+       
         //reset frame countdown
 
-        framesLeft = (MAX_FRAMES_PER_GENERATION += 10);
+        framesLeft = Math.floor((maxfitness - 30) ** 2);
 
     }
 }
@@ -153,21 +171,21 @@ function initNeat(){
       1,
       null,
       {
- /*       mutation: [
+        mutation: [
             neataptic.methods.mutation.ADD_NODE,
-            neataptic.methods.SUB_NODE,
-            neataptic.methods.ADD_CONN,
-            neataptic.methods.SUB_CONN,
-            neataptic.methods.MOD_WEIGHT,
-            neataptic.methods.MOD_BIAS,
-            neataptic.methods.MOD_ACTIVATION,
-            neataptic.methods.ADD_GATE,
-            neataptic.methods.SUB_GATE,
-            neataptic.methods.ADD_SELF_CONN,
-            neataptic.methods.SUB_SELF_CONN,
-            neataptic.methods.ADD_BACK_CONN,
-            neataptic.methods.SUB_BACK_CONN
-          ], */
+            neataptic.methods.mutation.SUB_NODE,
+            neataptic.methods.mutation.ADD_CONN,
+            neataptic.methods.mutation.SUB_CONN,
+            neataptic.methods.mutation.MOD_WEIGHT,
+            neataptic.methods.mutation.MOD_BIAS,
+            neataptic.methods.mutation.MOD_ACTIVATION,
+            neataptic.methods.mutation.ADD_GATE,
+            neataptic.methods.mutation.SUB_GATE,
+            neataptic.methods.mutation.ADD_SELF_CONN,
+            neataptic.methods.mutation.SUB_SELF_CONN,
+            neataptic.methods.mutation.ADD_BACK_CONN,
+            neataptic.methods.mutation.SUB_BACK_CONN
+          ], 
         popsize: INITIAL_PLAYER_AMOUNT,
         mutationRate: MUTATION_RATE,
         elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT,
