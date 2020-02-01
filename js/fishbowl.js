@@ -157,7 +157,7 @@ function draw() {
         //reset fish size stats
 
         maxNNsize = neat.population.reduce ((acc, el) => Math.max (acc, el.nodes.length), 0);
-        maxTotalFishSize.forEach (el => el = [0,0]);
+        maxTotalFishSize = maxTotalFishSize.map (() => {return ([0,0])});
         td.fill(0);
        
         //reset frame countdown
