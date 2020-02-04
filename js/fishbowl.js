@@ -178,14 +178,9 @@ function initNeat(){
       1,
       null,
       {
-        popsize: INITIAL_PLAYER_AMOUNT,
-        mutationRate: MUTATION_RATE,
-        elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT,
-        network: new carrot.architect.Random(
-          SENSES,
-          SENSES + 1,
-          1
-        )
+        population_size: INITIAL_PLAYER_AMOUNT,
+        mutation_rate: MUTATION_RATE,
+        elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT
       }
     );
 }
