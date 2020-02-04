@@ -7,8 +7,17 @@ var foodDensity = [];
 var stats = [];
 var neat;
 var maxTotalFishSize = [];
+var maxNNsize;
 
+var SENSES = 2;
+var ACTIONS = 3;
 
+var td = Array(ACTIONS);
+
+var FOOD_DENSITY_GRID_STEP = 20;
+var FOOD_DENSITY_THRESHOLD = 20;
+
+var viz;
 
 // GA settings
 var INITIAL_PLAYER_AMOUNT     = 10;
@@ -18,13 +27,7 @@ var ELITISM_PERCENT   = 0.1;
 
 var MAX_FRAMES_PER_GENERATION = 100;
 var framesLeft = MAX_FRAMES_PER_GENERATION;
-var SENSES = 2;
-var ACTIONS = 3;
-var maxNNsize;
-var td = Array(ACTIONS);
 
-var FOOD_DENSITY_GRID_STEP = 20;
-var FOOD_DENSITY_THRESHOLD = 20;
 
 /*
 function mouseClicked() {
@@ -57,7 +60,17 @@ function setup() {
         maxTotalFishSize.push ([0, 0]); // [max size of the corresponding brainIndex on this frame, max size in this iteration]
     }
 
+    // add chart
 
+    viz = new Chart("viz", {
+        type: "horizontalBar",
+        data: {
+            labels: ['stay', 'pulse', 'split'],
+            datasets: [{
+                label: "action distribution",
+                data: td}]
+        }
+    });
 
 }
 
@@ -116,15 +129,8 @@ function draw() {
     objs.forEach (obj => {if (obj instanceof Critter) td[obj.thought]++});
     var sumtd = td.reduce ((acc, el) => acc + el, 0);
 
-
-    new Chart(document.getElementById("viz").getContext("2d"), {
-        type: 'bar',
-        data: td
-    });
-
-    document.getElementById("d0").textContent = Math.round(td[0] / sumtd * 100);
-    document.getElementById("d1").textContent = Math.round(td[1] / sumtd * 100);
-    document.getElementById("d2").textContent = Math.round(td[2] / sumtd * 100);
+    viz.data.datasets[0].data = td;
+    viz.update();
  
     // new generation
 
@@ -162,12 +168,6 @@ function draw() {
         //reset frame countdown
 
         framesLeft = Math.floor(maxfitness * 10);
-
-        //draw graph of the network
-
-        // d3.graph(neat.population[0], '#viz');
-    
-
 
     }
 }
