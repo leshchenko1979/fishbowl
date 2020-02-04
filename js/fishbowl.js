@@ -124,7 +124,7 @@ function draw() {
 
     if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 0)) {
         
-        //kill off remaining fish
+        //kill off remaining objs
 
         objs = [];
 
@@ -133,21 +133,19 @@ function draw() {
         for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++)
             neat.population[i].score = maxTotalFishSize[i][0] + maxTotalFishSize[i][1];
 
-        neat.sort;
-        var newpopulation = [];
+        neat.evolve();
+        
+        // create new fish
+        
         for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
-            newpopulation[i] = neat.getOffspring();
             objs.push(new Critter(random() * width, random() * height, i));
         }
 
+        //create new food
+        
         for (var i = 0; i < 500; i++)
         objs.push(new Food(random() * width, random() * height));
-
-        // Replace the old population with the new population
-        neat.population = newpopulation;
-        neat.mutate();
-        neat.generation++;
-
+        
         //reset fish size stats
 
         maxNNsize = neat.population.reduce ((acc, el) => Math.max (acc, el.nodes.length), 0);
