@@ -10,9 +10,9 @@ class Food extends Obj {
 
         //grow
 
-        var foodSize = foodDensity[round(this.position.y / 10) * ((width / 10 >> 0) + 1) + round(this.position.y / 10)];
-        if ((foodSize < 10) && (random() < 0.1) && this.size < 20) this.size += 0.1;
-        else if ((foodSize > 10) && (random() < 0.1)) this.size -= 0.3;
+        var foodSize = foodDensity[round(this.position.y / FOOD_DENSITY_GRID_STEP) * (width / FOOD_DENSITY_GRID_STEP >> 0) + round(this.position.x / FOOD_DENSITY_GRID_STEP)];
+        if ((foodSize < FOOD_DENSITY_THRESHOLD) && (random() < 0.1)) this.size += 0.1;
+        else if ((foodSize > FOOD_DENSITY_THRESHOLD) && (random() < 0.1)) this.size -= 0.3;
 
         //		console.log (foodSize);
 

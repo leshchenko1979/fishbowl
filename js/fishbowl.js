@@ -23,6 +23,8 @@ var ACTIONS = 3;
 var maxNNsize;
 var td = Array(ACTIONS);
 
+var FOOD_DENSITY_GRID_STEP = 20;
+var FOOD_DENSITY_THRESHOLD = 20;
 
 /*
 function mouseClicked() {
@@ -63,11 +65,11 @@ function draw() {
     background("gray");
 
     //calculate food density
-    foodDensity = Array(((width / 10 >> 0) + 1) * (height / 10 >> 0) + 1);
+    foodDensity = Array(((width / FOOD_DENSITY_GRID_STEP >> 0) + 1) * ((height / FOOD_DENSITY_GRID_STEP >> 0) + 1));
     foodDensity.fill(0);
     objs.forEach(obj => {
         if (obj instanceof Food)
-            foodDensity[round(obj.getPosition().y / 10) * ((width / 10 >> 0) + 1) + round(obj.getPosition().x / 10)] += obj.getSize();
+            foodDensity[round(obj.getPosition().y / FOOD_DENSITY_GRID_STEP) * (width / FOOD_DENSITY_GRID_STEP >> 0) + round(obj.getPosition().x / FOOD_DENSITY_GRID_STEP)] += obj.getSize();
     });
 
     //main cycle
@@ -114,17 +116,21 @@ function draw() {
     objs.forEach (obj => {if (obj instanceof Critter) td[obj.thought]++});
     var sumtd = td.reduce ((acc, el) => acc + el, 0);
 
+
+    new Chart(document.getElementById("viz").getContext("2d"), {
+        type: 'bar',
+        data: td
+    });
+
     document.getElementById("d0").textContent = Math.round(td[0] / sumtd * 100);
     document.getElementById("d1").textContent = Math.round(td[1] / sumtd * 100);
     document.getElementById("d2").textContent = Math.round(td[2] / sumtd * 100);
-    document.getElementById("d3").textContent = Math.round(td[3] / sumtd * 100);
-    document.getElementById("d4").textContent = Math.round(td[4] / sumtd * 100);
-
+ 
     // new generation
 
     if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 0)) {
         
-        //kill off remaining fish
+        //reset objects
 
         objs = [];
 

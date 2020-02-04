@@ -4,6 +4,7 @@
   </head>
   <body>
     <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script src="js/obj.js"></script>
     <script src="js/food.js"></script>
     <script src="js/critter.js"></script>
@@ -22,11 +23,10 @@
           <p>- 0:<span id="d0"></span></p>
           <p>- 1:<span id="d1"></span></p>
           <p>- 2:<span id="d2"></span></p>
-          <p>- 3:<span id="d3"></span></p>
-          <p>- 4:<span id="d4"></span></p>
+
         </div>
         <div>
-          <svg id="viz" width="100px" height="100px"></svg>
+          <canvas id="viz" width="100px" height="100px"></canvas>
         </div>
       </td>
       <td width=80%><div id="canvas"></div></td>
