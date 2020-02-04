@@ -17,7 +17,7 @@ var td = Array(ACTIONS);
 var FOOD_DENSITY_GRID_STEP = 20;
 var FOOD_DENSITY_THRESHOLD = 20;
 
-var viz;
+var viz, vizfit;
 
 // GA settings
 var INITIAL_PLAYER_AMOUNT     = 10;
@@ -60,7 +60,7 @@ function setup() {
         maxTotalFishSize.push ([0, 0]); // [max size of the corresponding brainIndex on this frame, max size in this iteration]
     }
 
-    // add chart
+    // add charts
 
     viz = new Chart("viz", {
         type: "horizontalBar",
@@ -69,6 +69,16 @@ function setup() {
             datasets: [{
                 label: "action distribution",
                 data: td}]
+        }
+    });
+
+    vizfit = new Chart("vizfit", {
+        type: "line",
+        data: {
+            labels: [],
+            datasets: [{
+                label: "fitness",
+                data: []}]
         }
     });
 
@@ -131,6 +141,12 @@ function draw() {
 
     viz.data.datasets[0].data = td;
     viz.update();
+
+    vizfit.data.datasets[0].data.push (maxfitness);
+    vizfit.data.labels.push (frameCount);
+    vizfit.update();
+
+
  
     // new generation
 
@@ -168,6 +184,12 @@ function draw() {
         //reset frame countdown
 
         framesLeft = Math.floor(maxfitness * 10);
+
+        // reset fitness viz
+
+        vizfit.data.datasets[0].data = [];
+        vizfit.data.labels = [];
+
 
     }
 }
