@@ -18,6 +18,8 @@ const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
 const VISION_RANGE = 100;
 
+var FDG_WIDTH, FDG_HEIGHT;
+
 var viz, vizfit;
 
 // GA settings
@@ -50,6 +52,8 @@ function setup() {
     maxNNsize = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length), 0);
     td.fill(0);
 
+    FDG_WIDTH = ((width / FOOD_DENSITY_GRID_STEP) >> 0) + 1;  // FDG = food density grid
+    FDG_HEIGHT = ((height / FOOD_DENSITY_GRID_STEP) >> 0) + 1;
 
     //add objects
 
@@ -91,11 +95,12 @@ function draw() {
     background("gray");
 
     //calculate food density
-    foodDensity = Array(((width / FOOD_DENSITY_GRID_STEP >> 0) + 1) * ((height / FOOD_DENSITY_GRID_STEP >> 0) + 1));
-    foodDensity.fill(0);
+
+    foodDensity = Array(FDG_WIDTH).fill(0).map (x => Array(FDG_HEIGHT).fill(0));
+    
     objs.forEach(obj => {
         if (obj instanceof Food)
-            foodDensity[round(obj.getPosition().y / FOOD_DENSITY_GRID_STEP) * (width / FOOD_DENSITY_GRID_STEP >> 0) + round(obj.getPosition().x / FOOD_DENSITY_GRID_STEP)] += obj.getSize();
+            foodDensity[round(obj.position.x / FOOD_DENSITY_GRID_STEP)][round(obj.position.y / FOOD_DENSITY_GRID_STEP)] += obj.size;
     });
 
     //main cycle
@@ -181,7 +186,7 @@ function newGeneration()
     vizfit.data.labels.push(neat.generation + 1);
     vizfit.update();
 
-    document.getElementById("generation").textContent = neat.generation + 1;
+    document.getElementById("generation").textContent = neat.generation;
     document.getElementById("maxNNsize").textContent = maxNNsize;
 
     //reset fish size stats

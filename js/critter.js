@@ -76,6 +76,9 @@ class Critter extends Obj {
 
             var visionVector = p5.Vector.add(this.position, this.movement.copy().normalize().setMag(VISION_RANGE));
             var x2 = visionVector.x;
+
+            
+
             x2 = max(x2, 0);
             x2 = min(x2, width);
             var y2 = visionVector.y;
@@ -84,17 +87,20 @@ class Critter extends Obj {
 
             var len = p5.Vector.dist(this.position, visionVector);
 
-            foodVision = foodDensity.reduce((acc, el, i) => {
+            for (var j = round (min (x1, x2) / FOOD_DENSITY_GRID_STEP); j <= round (max (x1, x2) / FOOD_DENSITY_GRID_STEP); j++) {
+                for (var k = round (min (y1, y2) / FOOD_DENSITY_GRID_STEP); k <= round (max (y1, y2) / FOOD_DENSITY_GRID_STEP); k++) {
 
-                let x0 = i % (width / FOOD_DENSITY_GRID_STEP + 1) + FOOD_DENSITY_GRID_STEP / 2;
-                let y0 = i / ((width / FOOD_DENSITY_GRID_STEP + 1) >> 0) + FOOD_DENSITY_GRID_STEP / 2;
+                    let x0 = (j + 1/2) * FOOD_DENSITY_GRID_STEP;
+                    let y0 = (k + 1/2) * FOOD_DENSITY_GRID_STEP;
+    
+                    let distance = // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+                        abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) / max (1, len);
 
-                let distance = // https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
-                    abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) / len;
+                    if (distance^2 < FOOD_DENSITY_GRID_STEP)
+                        foodVision += foodDensity[j][k] / max (1, dist(x1, y1, x0, y0));
 
-                return (acc + ((distance * distance) < FOOD_DENSITY_GRID_STEP ? el / dist(x1, y1, x0, y0) : 0));
-
-            }, 0)
+                }
+            }
         }
 
         // collect inputs
