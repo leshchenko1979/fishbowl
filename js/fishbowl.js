@@ -130,13 +130,7 @@ function draw() {
 
     // display stats
 
-    document.getElementById("generation").textContent = neat.generation + 1;
     document.getElementById("frames").textContent = framesLeft;
-
-    var maxfitness = maxTotalFishSize.reduce((acc, el) => Math.max(el[0] + el[1], acc), 0);
-    document.getElementById("maxfitness").textContent = Math.round(maxfitness);
-
-    document.getElementById("maxNNsize").textContent = maxNNsize;
 
     objs.forEach(obj => { if (obj instanceof Critter) td[obj.thought]++ });
     var sumtd = td.reduce((acc, el) => acc + el, 0);
@@ -144,56 +138,61 @@ function draw() {
     viz.data.datasets[0].data = td;
     viz.update();
 
+
+    // new generation
+
+    if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 0))
+        newGeneration();
+
+}
+
+function newGeneration()
+
+{
+
+
+    //evaluation
+
+    for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++)
+        neat.population[i].score = maxTotalFishSize[i][0] + maxTotalFishSize[i][1];
+
+    neat.evolve();
+
+    //kill off remaining objs
+
+    objs = [];
+
+    // create new fish
+
+    for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
+        objs.push(new Critter(random() * width, random() * height, i));
+    }
+
+    //create new food
+
+    for (var i = 0; i < 500; i++)
+        objs.push(new Food(random() * width, random() * height));
+
+    // udpate fitness viz
+
+    var maxfitness = maxTotalFishSize.reduce((acc, el) => Math.max(el[0] + el[1], acc), 0);
     vizfit.data.datasets[0].data.push(maxfitness);
     vizfit.data.labels.push(frameCount);
     vizfit.update();
 
+    document.getElementById("generation").textContent = neat.generation + 1;
+    document.getElementById("maxNNsize").textContent = maxNNsize;
 
+    //reset fish size stats
 
-    // new generation
+    maxNNsize = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length), 0);
+    maxTotalFishSize = maxTotalFishSize.map(() => { return ([0, 0]) });
+    td.fill(0);
 
-    if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 0)) {
+    //reset frame countdown
 
+    framesLeft = Math.floor(maxfitness * 10);
 
-        //kill off remaining objs
-
-        objs = [];
-
-        //evaluation
-
-        for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++)
-            neat.population[i].score = maxTotalFishSize[i][0] + maxTotalFishSize[i][1];
-
-        neat.evolve();
-
-        // create new fish
-
-        for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
-            objs.push(new Critter(random() * width, random() * height, i));
-        }
-
-        //create new food
-
-        for (var i = 0; i < 500; i++)
-            objs.push(new Food(random() * width, random() * height));
-
-        //reset fish size stats
-
-        maxNNsize = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length), 0);
-        maxTotalFishSize = maxTotalFishSize.map(() => { return ([0, 0]) });
-        td.fill(0);
-
-        //reset frame countdown
-
-        framesLeft = Math.floor(maxfitness * 10);
-
-        // reset fitness viz
-
-        vizfit.data.datasets[0].data = [];
-        vizfit.data.labels = [];
-
-
-    }
 }
 
 function initNeat() {

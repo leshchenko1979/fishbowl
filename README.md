@@ -1,5 +1,5 @@
 # fishbowl
-Simulating evolution of fish intelligence in a fishbowl using genetic algorithms.
+Simulating evolution of fish intelligence in a fishbowl using neuroevolution / genetic algorithms.
 
 # Inputs of the fish brain
 - 1st node: density of food in the vicinity of the fish *(disabled)*
