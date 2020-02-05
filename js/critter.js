@@ -12,8 +12,8 @@ class Critter extends Obj {
     }
 
     draw() {
-      fill(color (this.brainIndex * 10, 50, 70));
-      super.draw();
+        fill(color(this.brainIndex * 10, 50, 70));
+        super.draw();
     }
 
     live() {
@@ -35,13 +35,13 @@ class Critter extends Obj {
                 if (objs[i] && (objs[i] instanceof Food) && this.eatenTimer < 50) {
                     var distance = p5.Vector.dist(this.position, objs[i].getPosition());
                     if ((this != objs[i]) && (distance < this.size + objs[i].getSize())) {
-                        
+
                         this.eatenTimer += objs[i].getSize() * 1;
-                        
+
                         // disable eating on the first frame to mess up the fitness calculation
                         if (frameCount > 0)
                             this.size = sqrt(sq(this.size) + sq(objs[i].getSize()));
-                        
+
                         objs[i].delete();
                     }
                 }
@@ -68,34 +68,42 @@ class Critter extends Obj {
         // collect and normalize inputs
 
         var inputs = [
-        
+
             // inverting foodDensity as a means of normalisation
-            
+
             // foodDensity[round(this.getPosition().y / 10) * ((width / 10 >> 0) + 1) + round(this.getPosition().x / 10)] / 100,
 
             // normalisation of speed 
 
             this.movement.mag() / 7,
- 
+
             // inverting fish size as a means of normalisation
 
-            1 / this.size
+            1 / this.size,
+
+            // food vision goes here
+
+            // fish vision
+
+            objs.filter(obj => obj instanceof Critter)
+            .reduce((acc, el) =>
+                (acc + 1 / dist(this.position.x, this.position.y, el.position.x, el.position.y) * el.size), 0)
 
         ];
 
         // activate brain
 
-        this.thought = Math.floor (this.brain.activate(inputs)[0] * ACTIONS) % ACTIONS;
-        if (this.thought > ACTIONS) console.log (this.thought);
+        this.thought = Math.floor(this.brain.activate(inputs)[0] * ACTIONS) % ACTIONS;
+        if (this.thought > ACTIONS) console.log(this.thought);
 
     }
 
     act() {
 
         //pulse
-        if ((this.thought == 1) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)){
+        if ((this.thought == 1) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)) {
             if (this.movement.mag() == 0)
-                this.movement = p5.Vector.random2D().mult (5)
+                this.movement = p5.Vector.random2D().mult(5)
             else
                 this.movement.setMag(this.movement.mag() + 5);
             this.size *= 0.9;
@@ -105,9 +113,9 @@ class Critter extends Obj {
 
         if ((this.size > 20) && (this.thought == 2)) {
             this.size /= 2;
-            var critter = new Critter (0, 0, this.brainIndex);
+            var critter = new Critter(0, 0, this.brainIndex);
             var v = p5.Vector.random2D();
-            v.setMag (this.movement.mag());
+            v.setMag(this.movement.mag());
             // v.mult(2);
             critter.setPosition(this.position);
             critter.setSize(this.size);
@@ -115,20 +123,20 @@ class Critter extends Obj {
             objs.push(critter);
             this.movement = p5.Vector.mult(v, -1);
         }
-/*
-        // turn left
+        /*
+                // turn left
 
-        if (this.thought == 3) 
+                if (this.thought == 3) 
 
-            this.movement.rotate(- PI / 5);
+                    this.movement.rotate(- PI / 5);
 
-         // turn right
+                 // turn right
 
-        if (this.thought == 4) 
+                if (this.thought == 4) 
 
-            this.movement.rotate(PI / 5);
+                    this.movement.rotate(PI / 5);
 
-*/
+        */
     }
 
     click(x, y) {
