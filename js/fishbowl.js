@@ -9,23 +9,24 @@ var neat;
 var maxTotalFishSize = [];
 var maxNNsize;
 
-var SENSES = 2;
-var ACTIONS = 3;
+const SENSES = 4;
+const ACTIONS = 5;
 
 var td = Array(ACTIONS);
 
-var FOOD_DENSITY_GRID_STEP = 20;
-var FOOD_DENSITY_THRESHOLD = 20;
+const FOOD_DENSITY_GRID_STEP = 20;
+const FOOD_DENSITY_THRESHOLD = 20;
+const VISION_RANGE = 100;
 
 var viz, vizfit;
 
 // GA settings
-var INITIAL_PLAYER_AMOUNT = 10;
-var ITERATIONS = 1000;
-var MUTATION_RATE = 0.3;
-var ELITISM_PERCENT = 0.1;
+const INITIAL_PLAYER_AMOUNT = 10;
+const ITERATIONS = 1000;
+const MUTATION_RATE = 0.3;
+const ELITISM_PERCENT = 0.1;
 
-var MAX_FRAMES_PER_GENERATION = 100;
+const MAX_FRAMES_PER_GENERATION = 100;
 var framesLeft = MAX_FRAMES_PER_GENERATION;
 
 
@@ -65,7 +66,7 @@ function setup() {
     viz = new Chart("viz", {
         type: "horizontalBar",
         data: {
-            labels: ['stay', 'pulse', 'split'],
+            labels: ['stay', 'pulse', 'split', "left", "right"],
             datasets: [{
                 label: "action distribution",
                 data: td
@@ -162,22 +163,22 @@ function newGeneration()
 
     objs = [];
 
+    //create new food
+
+    for (var i = 0; i < 500; i++)
+        objs.push(new Food(random() * width, random() * height));
+
     // create new fish
 
     for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
         objs.push(new Critter(random() * width, random() * height, i));
     }
 
-    //create new food
-
-    for (var i = 0; i < 500; i++)
-        objs.push(new Food(random() * width, random() * height));
-
     // udpate fitness viz
 
     var maxfitness = maxTotalFishSize.reduce((acc, el) => Math.max(el[0] + el[1], acc), 0);
     vizfit.data.datasets[0].data.push(maxfitness);
-    vizfit.data.labels.push(frameCount);
+    vizfit.data.labels.push(neat.generation + 1);
     vizfit.update();
 
     document.getElementById("generation").textContent = neat.generation + 1;
