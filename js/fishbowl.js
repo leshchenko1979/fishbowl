@@ -9,13 +9,14 @@ var neat;
 var maxTotalFishSize = [];
 var maxNNsize;
 
-const SENSES = 3;
-const ACTIONS = 3;
+const SENSES = 4;
+const ACTIONS = 5;
 
 var td = Array(ACTIONS);
 
 const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
+const VISION_RANGE = 100;
 
 var viz, vizfit;
 
@@ -65,7 +66,7 @@ function setup() {
     viz = new Chart("viz", {
         type: "horizontalBar",
         data: {
-            labels: ['stay', 'pulse', 'split'],
+            labels: ['stay', 'pulse', 'split', "left", "right"],
             datasets: [{
                 label: "action distribution",
                 data: td
