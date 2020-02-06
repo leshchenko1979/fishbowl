@@ -199,12 +199,11 @@ function newGeneration()
     for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++)
         neat.population[i].score = maxTotalFishSize[i][0] + maxTotalFishSize[i][1];
 
+    neat.evolve();
 
     // save neat to localstorage
 
     localStorage.setItem("population", JSON.stringify(neat.toJSON()));
-
-    neat.evolve();
 
     //kill off remaining objs
 
