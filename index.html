@@ -1,33 +1,37 @@
 <html>
-  <head>
+
+<head>
     <script src="https://cdn.jsdelivr.net/npm/@liquid-carrot/carrot/dist/carrot.umd2.min.js"></script>
-  </head>
-  <body>
+</head>
+
+<body>
     <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
     <script src="js/obj.js"></script>
     <script src="js/food.js"></script>
     <script src="js/critter.js"></script>
     <script src="js/fishbowl.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <table>
-    <tr>
-      <td width=20%>
-        <div id="stats" style="vertical-align: top; font: 1em sans-serif;">
+        <tr>
+            <td width=20%>
+                <div id="stats" style="vertical-align: top; font: 1em sans-serif;">
 
-          <p>Generation: <span id="generation"></span></p>
-          <p>Frames left: <span id="frames"></span></p>
-          <p>Max fitness: <span id="maxfitness"></span></p>
-          <p>Max NN size: <span id="maxNNsize"></span></p>
+                    <p>Generation: <span id="generation">1</span></p>
+                    <p>Frames left: <span id="frames"></span></p>
+                    <p>Max NN size: <span id="maxNNsize"></span></p>
 
-        </div>
-        <div>
-          <canvas id="viz" width="100px" height="100px"></canvas>
-          <canvas id="vizfit" width="100px" height="100px"></canvas>
-        </div>
-      </td>
-      <td width=80%><div id="canvas"></div></td>
-    </tr>
-  </table>
-  </body>
+                </div>
+                <div>
+                    <canvas id="viz" width="100px" height="100px"></canvas>
+                    <canvas id="vizfit" width="100px" height="100px"></canvas>
+                </div>
+            </td>
+            <td width=80%>
+                <div id="canvas"></div>
+            </td>
+        </tr>
+    </table>
+</body>
+
 </html>

@@ -80,6 +80,40 @@ function setup() {
         }
     });
 
+    /* tried dual Y-axes - didn't work yet. Issue at the chart.js project: https://github.com/chartjs/Chart.js/issues/7065
+
+        vizfit = new Chart("vizfit", {
+            type: "line",
+            data: {
+                labels: [],
+                datasets: [{
+                        label: "fitness",
+                        data: [],
+                        yAxisID: "left-y-axis"
+                    },
+                    {
+                        label: "max NN size",
+                        data: [],
+                        yAxisID: "right-y-axis"
+                    }
+                ],
+                options: {
+                    scales: {
+                        yAxes: [{
+                            id: 'left-y-axis',
+                            type: 'linear',
+                            position: 'left'
+                        }, {
+                            id: 'right-y-axis',
+                            type: 'linear',
+                            position: 'right'
+                        }]
+                    }
+                }
+
+            }
+        });
+    */
     vizfit = new Chart("vizfit", {
         type: "line",
         data: {
@@ -87,7 +121,8 @@ function setup() {
             datasets: [{
                 label: "fitness",
                 data: []
-            }]
+            }, ]
+
         }
     });
 
@@ -184,8 +219,9 @@ function newGeneration()
     // udpate fitness viz
 
     var maxfitness = maxTotalFishSize.reduce((acc, el) => Math.max(el[0] + el[1], acc), 0);
+    vizfit.data.labels.push(neat.generation);
     vizfit.data.datasets[0].data.push(maxfitness);
-    vizfit.data.labels.push(neat.generation + 1);
+    // vizfit.data.datasets[1].data.push(maxNNsize);
     vizfit.update();
 
     document.getElementById("generation").textContent = neat.generation;
