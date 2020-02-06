@@ -199,6 +199,11 @@ function newGeneration()
     for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++)
         neat.population[i].score = maxTotalFishSize[i][0] + maxTotalFishSize[i][1];
 
+
+    // save neat to localstorage
+
+    localStorage.setItem("population", JSON.stringify(neat.toJSON()));
+
     neat.evolve();
 
     //kill off remaining objs
@@ -240,6 +245,18 @@ function newGeneration()
 }
 
 function initNeat() {
+
+    try {
+        let p = localStorage.getItem("population");
+        neat = new carrot.Neat();
+        neat.fromJSON(JSON.parse(p));
+        console.log("Neural network population imported from the previous session");
+        return;
+    } catch (e) {
+        console.log(e);
+        console.log("Importing neural network population failed, creating a random one")
+    };
+
     neat = new carrot.Neat(
         SENSES,
         1,
