@@ -16,7 +16,9 @@ var td = Array(ACTIONS);
 
 const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
-const VISION_RANGE = 100;
+const VISION_RANGE = 200;
+
+const VERBOSE = true;
 
 var FDG_WIDTH, FDG_HEIGHT;
 
@@ -52,7 +54,7 @@ function setup() {
     maxNNsize = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length), 0);
     td.fill(0);
 
-    FDG_WIDTH = ((width / FOOD_DENSITY_GRID_STEP) >> 0) + 1;  // FDG = food density grid
+    FDG_WIDTH = ((width / FOOD_DENSITY_GRID_STEP) >> 0) + 1; // FDG = food density grid
     FDG_HEIGHT = ((height / FOOD_DENSITY_GRID_STEP) >> 0) + 1;
 
     //add objects
@@ -96,8 +98,8 @@ function draw() {
 
     //calculate food density
 
-    foodDensity = Array(FDG_WIDTH).fill(0).map (x => Array(FDG_HEIGHT).fill(0));
-    
+    foodDensity = Array(FDG_WIDTH).fill(0).map(x => Array(FDG_HEIGHT).fill(0));
+
     objs.forEach(obj => {
         if (obj instanceof Food)
             foodDensity[round(obj.position.x / FOOD_DENSITY_GRID_STEP)][round(obj.position.y / FOOD_DENSITY_GRID_STEP)] += obj.size;
