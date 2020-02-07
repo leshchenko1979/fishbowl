@@ -7,7 +7,7 @@ var foodDensity = [];
 var stats = [];
 var neat;
 var maxTotalFishSize = [];
-var maxNNsize;
+var NNcomplexity;
 
 const SENSES = 4;
 const ACTIONS = 5;
@@ -51,7 +51,7 @@ function setup() {
 
     initNeat();
 
-    maxNNsize = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length), 0);
+    NNcomplexity = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length + el.connections.length), 0);
     td.fill(0);
 
     FDG_WIDTH = ((width / FOOD_DENSITY_GRID_STEP) >> 0) + 1; // FDG = food density grid
@@ -80,51 +80,38 @@ function setup() {
         }
     });
 
-    /* tried dual Y-axes - didn't work yet. Issue at the chart.js project: https://github.com/chartjs/Chart.js/issues/7065
-
-        vizfit = new Chart("vizfit", {
-            type: "line",
-            data: {
-                labels: [],
-                datasets: [{
-                        label: "fitness",
-                        data: [],
-                        yAxisID: "left-y-axis"
-                    },
-                    {
-                        label: "max NN size",
-                        data: [],
-                        yAxisID: "right-y-axis"
-                    }
-                ],
-                options: {
-                    scales: {
-                        yAxes: [{
-                            id: 'left-y-axis',
-                            type: 'linear',
-                            position: 'left'
-                        }, {
-                            id: 'right-y-axis',
-                            type: 'linear',
-                            position: 'right'
-                        }]
-                    }
-                }
-
-            }
-        });
-    */
     vizfit = new Chart("vizfit", {
         type: "line",
         data: {
             labels: [],
             datasets: [{
-                label: "fitness",
-                data: []
-            }, ]
-
+                    label: "fitness",
+                    data: [],
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    yAxisID: "left-y-axis"
+                },
+                {
+                    label: "NN complexity",
+                    data: [],
+                    backgroundColor: 'rgb(99, 255, 132)',
+                    yAxisID: "right-y-axis"
+                }]
+            },
+        options: {
+            scales: {
+                yAxes: [{
+                    id: 'left-y-axis',
+                    type: 'linear',
+                    position: 'left'
+                }, {
+                    id: 'right-y-axis',
+                    type: 'linear',
+                    position: 'right'
+                }]
+            }
         }
     });
+
 
 }
 
@@ -176,7 +163,6 @@ function draw() {
     document.getElementById("frames").textContent = framesLeft;
 
     objs.forEach(obj => { if (obj instanceof Critter) td[Math.floor(obj.thought)]++ });
-    var sumtd = td.reduce((acc, el) => acc + el, 0);
 
     viz.data.datasets[0].data = td;
     viz.update();
@@ -225,15 +211,14 @@ function newGeneration()
     var maxfitness = maxTotalFishSize.reduce((acc, el) => Math.max(el[0] + el[1], acc), 0);
     vizfit.data.labels.push(neat.generation);
     vizfit.data.datasets[0].data.push(maxfitness);
-    // vizfit.data.datasets[1].data.push(maxNNsize);
+    vizfit.data.datasets[1].data.push(NNcomplexity);
     vizfit.update();
 
-    document.getElementById("generation").textContent = neat.generation;
-    document.getElementById("maxNNsize").textContent = maxNNsize;
+    document.getElementById("generation").textContent = neat.generation + 1;
 
     //reset fish size stats
 
-    maxNNsize = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length), 0);
+    NNcomplexity = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length + el.connections.length), 0);
     maxTotalFishSize = maxTotalFishSize.map(() => { return ([0, 0]) });
     td.fill(0);
 
