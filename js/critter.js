@@ -1,19 +1,21 @@
 class Critter extends Obj {
 
-    constructor(x, y, brainIndex) {
+    constructor(x, y, brain) {
         super(x, y);
         this.size = 20;
         this.movement = new p5.Vector;
         this.eatenTimer = 0;
         this.thought = 0;
 
-        this.brainIndex = brainIndex;
-        this.brain = neat.population[brainIndex];
+
+        this.brain = brain;
+        this.color;
         this.foodVision;
+        this.birthFrame = frameCount;
     }
 
     draw() {
-        fill(color(this.brainIndex * 10, 50, 70));
+        fill(color(this.color, 50, 70));
         super.draw();
         if (VERBOSE) {
             fill("black");
@@ -55,9 +57,6 @@ class Critter extends Obj {
 
         //expend energy on ambient bodily functions
         this.size *= 0.999;
-
-        // add my size to the corresponding brain statistics
-        maxTotalFishSize[this.brainIndex][0] += this.size;
 
         //die if too small
         if (this.size < 5) {
@@ -158,16 +157,24 @@ class Critter extends Obj {
         // split
 
         if ((this.size > 20) && (this.thought > 2) && (this.thought <= 3)) {
+            
             this.size /= 2;
-            var critter = new Critter(0, 0, this.brainIndex);
+            
+            var b = this.brain.clone();
+            // b.mutate(mutation.methods.ALL);
+            var critter = new Critter(this.position.x, this.position.y, b);
+            neat.resize([b]);
+
             var v = p5.Vector.random2D();
             v.setMag(this.movement.mag());
-            // v.mult(2);
-            critter.setPosition(this.position);
             critter.setSize(this.size);
             critter.setMovement(v);
+            critter.color = this.color;
             objs.push(critter);
+            
             this.movement = p5.Vector.mult(v, -1);
+            this.birthFrame = frameCount;
+            
             return;
         }
 
@@ -179,6 +186,11 @@ class Critter extends Obj {
             this.movement.rotate((PI / 2) * (this.thought - 3) - PI / 4);
 
 
+    }
+
+    delete() {
+        super.delete();
+        this.brain.score = frameCount - this.birthFrame;
     }
 
     click(x, y) {

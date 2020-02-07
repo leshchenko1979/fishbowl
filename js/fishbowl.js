@@ -6,7 +6,6 @@ var objs = [];
 var foodDensity = [];
 var stats = [];
 var neat;
-var maxTotalFishSize = [];
 var NNcomplexity;
 
 const SENSES = 4;
@@ -17,6 +16,8 @@ var td = Array(ACTIONS);
 const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
 const VISION_RANGE = 200;
+
+const INITIAL_FOOD_AMOUNT = 100;
 
 const VERBOSE = true;
 
@@ -44,7 +45,7 @@ function mouseClicked() {
 */
 
 function setup() {
-    var canvas = createCanvas(windowWidth * 0.9 - 20, windowHeight - 30);
+    var canvas = createCanvas(windowWidth - 220, windowHeight - 25);
     canvas.parent('canvas');
     background("gray");
     colorMode(HSB, 100);
@@ -59,12 +60,13 @@ function setup() {
 
     //add objects
 
-    for (var i = 0; i < 500; i++)
+    for (var i = 0; i < INITIAL_FOOD_AMOUNT; i++)
         objs.push(new Food(random() * width, random() * height));
 
-    for (var i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
-        objs.push(new Critter(random() * width, random() * height, i));
-        maxTotalFishSize.push([0, 0]); // [max size of the corresponding brainIndex on this frame, max size in this iteration]
+    for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
+        let o = new Critter(random() * width, random() * height, neat.population[i]);
+        objs.push(o);
+        o.color = i * 10;
     }
 
     // add charts
@@ -129,10 +131,6 @@ function draw() {
 
     //main cycle
 
-    // init food stats
-
-    maxTotalFishSize.forEach(el => (el[0] = 0));
-
     // let the objects live
 
     var i = 0;
@@ -141,10 +139,6 @@ function draw() {
         if (objs[i]) objs[i].draw();
     }
     while (objs.length - 1 > i++);
-
-    // finalize fish stats on this frame
-
-    maxTotalFishSize.forEach(el => (el[1] = Math.max(el[0], el[1])));
 
     // delete deleted
 
@@ -179,13 +173,19 @@ function newGeneration()
 
 {
 
-
     //evaluation
 
-    for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++)
-        neat.population[i].score = maxTotalFishSize[i][0] + maxTotalFishSize[i][1];
+    objs.forEach (obj => obj.delete());
+    neat.sort();
 
-    neat.evolve();
+    var maxfitness = neat.getFittest().score;
+
+    newPopulation = Array(INITIAL_PLAYER_AMOUNT).fill(0);
+
+    neat.population = newPopulation.map (() => neat.getOffspring());
+
+    neat.mutate();
+    neat.generation++;
 
     // save neat to localstorage
 
@@ -197,18 +197,19 @@ function newGeneration()
 
     //create new food
 
-    for (var i = 0; i < 500; i++)
+    for (var i = 0; i < INITIAL_FOOD_AMOUNT; i++)
         objs.push(new Food(random() * width, random() * height));
 
     // create new fish
 
     for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
-        objs.push(new Critter(random() * width, random() * height, i));
+        let o = new Critter(random() * width, random() * height, neat.population[i]);
+        objs.push(o);
+        o.color = i * 10;
     }
 
     // udpate fitness viz
 
-    var maxfitness = maxTotalFishSize.reduce((acc, el) => Math.max(el[0] + el[1], acc), 0);
     vizfit.data.labels.push(neat.generation);
     vizfit.data.datasets[0].data.push(maxfitness);
     vizfit.data.datasets[1].data.push(NNcomplexity);
@@ -219,7 +220,6 @@ function newGeneration()
     //reset fish size stats
 
     NNcomplexity = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length + el.connections.length), 0);
-    maxTotalFishSize = maxTotalFishSize.map(() => { return ([0, 0]) });
     td.fill(0);
 
     //reset frame countdown
