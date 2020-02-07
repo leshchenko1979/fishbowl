@@ -175,7 +175,7 @@ function draw() {
 
     document.getElementById("frames").textContent = framesLeft;
 
-    objs.forEach(obj => { if (obj instanceof Critter) td[obj.thought]++ });
+    objs.forEach(obj => { if (obj instanceof Critter) td[Math.floor(obj.thought)]++ });
     var sumtd = td.reduce((acc, el) => acc + el, 0);
 
     viz.data.datasets[0].data = td;

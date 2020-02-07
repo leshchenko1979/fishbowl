@@ -138,25 +138,26 @@ class Critter extends Obj {
 
         // activate brain
 
-        this.thought = Math.floor(this.brain.activate(inputs)[0] * ACTIONS) % ACTIONS;
-        if (this.thought > ACTIONS) console.log(this.thought);
+        this.thought = this.brain.activate(inputs)[0] * ACTIONS % ACTIONS;
+        if (this.thought > ACTIONS) console.log("Warning - thought exceeds ACTIONS" + this.thought);
 
     }
 
     act() {
 
         //pulse
-        if ((this.thought == 1) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)) {
+        if ((this.thought > 1) && (this.thought <= 2) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)) {
             if (this.movement.mag() == 0)
-                this.movement = p5.Vector.random2D().mult(5)
+                this.movement = p5.Vector.random2D().mult((this.thought - 1) * 5)
             else
-                this.movement.setMag(this.movement.mag() + 5);
+                this.movement.setMag(this.movement.mag() + (this.thought - 1) * 5);
             this.size *= 0.9;
+            return;
         }
 
         // split
 
-        if ((this.size > 20) && (this.thought == 2)) {
+        if ((this.size > 20) && (this.thought > 2) && (this.thought <= 3)) {
             this.size /= 2;
             var critter = new Critter(0, 0, this.brainIndex);
             var v = p5.Vector.random2D();
@@ -167,20 +168,16 @@ class Critter extends Obj {
             critter.setMovement(v);
             objs.push(critter);
             this.movement = p5.Vector.mult(v, -1);
+            return;
         }
 
 
-        // turn left
+        // turn
 
-        if (this.thought == 3)
+        if ((this.thought > 3) && (this.thought <= 5))
 
-            this.movement.rotate(-PI / 5);
+            this.movement.rotate((PI / 2) * (this.thought - 3) - PI / 4);
 
-        // turn right
-
-        if (this.thought == 4)
-
-            this.movement.rotate(PI / 5);
 
     }
 
