@@ -150,7 +150,7 @@ class Critter extends Obj {
                 this.movement = p5.Vector.random2D().mult((this.thought - 1) * 5)
             else
                 this.movement.setMag(this.movement.mag() + (this.thought - 1) * 5);
-            this.size *= 0.9;
+            this.size *= 1 - 0.1 * (this.thought - 1);
             return;
         }
 
