@@ -31,7 +31,7 @@ const ITERATIONS = 1000;
 const MUTATION_RATE = 0.3;
 const ELITISM_PERCENT = 0.1;
 
-const MAX_FRAMES_PER_GENERATION = 100;
+const MAX_FRAMES_PER_GENERATION = 2000;
 var framesLeft = MAX_FRAMES_PER_GENERATION;
 
 
@@ -164,7 +164,7 @@ function draw() {
 
     // new generation
 
-    if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 0))
+    if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 1))
         newGeneration();
 
 }
@@ -175,7 +175,9 @@ function newGeneration()
 
     //evaluation
 
-    objs.forEach (obj => obj.delete());
+    objs.filter(obj => obj instanceof Critter).forEach(fish => fish.brain.score = 1);
+    objs = [];
+
     neat.sort();
 
     var maxfitness = neat.getFittest().score;
@@ -224,7 +226,7 @@ function newGeneration()
 
     //reset frame countdown
 
-    framesLeft = Math.floor(maxfitness * 10);
+    framesLeft = MAX_FRAMES_PER_GENERATION;
 
 }
 

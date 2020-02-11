@@ -11,7 +11,6 @@ class Critter extends Obj {
         this.brain = brain;
         this.color;
         this.foodVision;
-        this.birthFrame = frameCount;
     }
 
     draw() {
@@ -161,7 +160,8 @@ class Critter extends Obj {
             this.size /= 2;
             
             var b = this.brain.clone();
-            // b.mutate(mutation.methods.ALL);
+            b.mutateRandom();
+            this.brain.mutateRandom();
             var critter = new Critter(this.position.x, this.position.y, b);
             neat.resize([b]);
 
@@ -173,7 +173,6 @@ class Critter extends Obj {
             objs.push(critter);
             
             this.movement = p5.Vector.mult(v, -1);
-            this.birthFrame = frameCount;
             
             return;
         }
@@ -190,7 +189,7 @@ class Critter extends Obj {
 
     delete() {
         super.delete();
-        this.brain.score = frameCount - this.birthFrame;
+        this.brain.score = 0;
     }
 
     click(x, y) {
