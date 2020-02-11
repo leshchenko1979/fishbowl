@@ -133,20 +133,17 @@ function draw() {
 
     // let the objects live
 
-    var i = 0;
-    do {
-        if (objs[i]) objs[i].live();
-        if (objs[i]) objs[i].draw();
-    }
-    while (objs.length - 1 > i++);
+    objs.forEach(obj => {
+       obj.live();
+       obj.draw();
+    });
 
     // delete deleted
 
-    i = 0;
-    do {
-        if (objs[i].isDeleted()) delete objs[i];
-    }
-    while (objs.length - 1 > i++);
+    objs.forEach(obj => {
+       if (obj.deleted)
+         delete obj;
+    });
 
     //clean up deleted from objs
 
