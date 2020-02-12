@@ -140,10 +140,11 @@ function draw() {
 
     // delete deleted
 
-    objs.forEach(obj => {
-       if (obj.deleted)
-         delete obj;
-    });
+    i = 0;
+    do {
+        if (objs[i].isDeleted()) delete objs[i];
+    }
+    while (objs.length - 1 > i++);
 
     //clean up deleted from objs
 
@@ -161,7 +162,7 @@ function draw() {
 
     // new generation
 
-    if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length == 1))
+    if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length <= 1))
         newGeneration();
 
 }
