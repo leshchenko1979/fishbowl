@@ -19,7 +19,8 @@ const VISION_RANGE = 200;
 
 const INITIAL_FOOD_AMOUNT = 100;
 
-const VERBOSE = true;
+const VERBOSE = false;
+var CYCLES_PER_FRAME = 1;
 
 var FDG_WIDTH, FDG_HEIGHT;
 
@@ -118,52 +119,56 @@ function setup() {
 }
 
 function draw() {
-    background("gray");
 
-    //calculate food density
+    for (var cycle = 0; cycle < CYCLES_PER_FRAME; cycle++) {
+        
+        //calculate food density
 
-    foodDensity = Array(FDG_WIDTH).fill(0).map(x => Array(FDG_HEIGHT).fill(0));
+        foodDensity = Array(FDG_WIDTH).fill(0).map(x => Array(FDG_HEIGHT).fill(0));
 
-    objs.forEach(obj => {
-        if (obj instanceof Food)
-            foodDensity[round(obj.position.x / FOOD_DENSITY_GRID_STEP)][round(obj.position.y / FOOD_DENSITY_GRID_STEP)] += obj.size;
-    });
+        objs.forEach(obj => {
+            if (obj instanceof Food)
+                foodDensity[round(obj.position.x / FOOD_DENSITY_GRID_STEP)][round(obj.position.y / FOOD_DENSITY_GRID_STEP)] += obj.size;
+        });
 
-    //main cycle
+        //main cycle
 
-    // let the objects live
+        // let the objects live
 
-    objs.forEach(obj => {
-       obj.live();
-       obj.draw();
-    });
+        objs.forEach(obj => obj.live());
 
-    // delete deleted
+        // delete deleted
 
-    i = 0;
-    do {
-        if (objs[i].isDeleted()) delete objs[i];
+        i = 0;
+        do {
+            if (objs[i].isDeleted()) delete objs[i];
+        }
+        while (objs.length - 1 > i++);
+
+        //clean up deleted from objs
+
+        objs = objs.filter(el => { if (el) return true; });
+
+        // new generation
+
+        if ((--framesLeft / CYCLES_PER_FRAME <= 0) || (objs.filter(obj => obj instanceof Critter).length <= 1))
+            newGeneration();
+
+
+        // update stats
+
+        document.getElementById("frames").textContent = framesLeft;
+
+        objs.filter(obj => obj instanceof Critter).forEach(obj => td[Math.floor(obj.thought)]++);
+
+        viz.data.datasets[0].data = td;
     }
-    while (objs.length - 1 > i++);
 
-    //clean up deleted from objs
+    //draw everything
 
-    objs = objs.filter(el => { if (el) return true; });
-
-    // display stats
-
-    document.getElementById("frames").textContent = framesLeft;
-
-    objs.forEach(obj => { if (obj instanceof Critter) td[Math.floor(obj.thought)]++ });
-
-    viz.data.datasets[0].data = td;
+    background("gray");
+    objs.forEach(obj => obj.draw())
     viz.update();
-
-
-    // new generation
-
-    if ((--framesLeft == 0) || (objs.filter(obj => obj instanceof Critter).length <= 1))
-        newGeneration();
 
 }
 
