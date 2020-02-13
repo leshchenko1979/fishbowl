@@ -1,5 +1,10 @@
 class Food extends Obj {
 
+    constructor (x, y) {
+        super(x, y);
+        this.size = random() * 17 + 3;
+    }
+    
     draw() {
         fill('white');
         super.draw();

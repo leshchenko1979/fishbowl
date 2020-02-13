@@ -17,10 +17,7 @@ const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
 const VISION_RANGE = 200;
 
-const INITIAL_FOOD_AMOUNT = 100;
-
-const VERBOSE = false;
-var CYCLES_PER_FRAME = 1;
+const INITIAL_FOOD_AMOUNT = 50;
 
 var FDG_WIDTH, FDG_HEIGHT;
 
@@ -32,8 +29,11 @@ const ITERATIONS = 1000;
 const MUTATION_RATE = 0.3;
 const ELITISM_PERCENT = 0.1;
 
+const VERBOSE = false;
+var CYCLES_PER_FRAME = 1;
 const MAX_FRAMES_PER_GENERATION = 2000;
-var framesLeft = MAX_FRAMES_PER_GENERATION;
+var cyclesLeft = MAX_FRAMES_PER_GENERATION;
+var firstCycle = true;
 
 
 /*
@@ -151,13 +151,13 @@ function draw() {
 
         // new generation
 
-        if ((--framesLeft / CYCLES_PER_FRAME <= 0) || (objs.filter(obj => obj instanceof Critter).length <= 1))
+        if ((--cyclesLeft / CYCLES_PER_FRAME <= 0) || (objs.filter(obj => obj instanceof Critter).length <= 1))
             newGeneration();
 
 
         // update stats
 
-        document.getElementById("frames").textContent = framesLeft;
+        document.getElementById("frames").textContent = cyclesLeft;
 
         objs.filter(obj => obj instanceof Critter).forEach(obj => td[Math.floor(obj.thought)]++);
 
@@ -229,7 +229,8 @@ function newGeneration()
 
     //reset frame countdown
 
-    framesLeft = MAX_FRAMES_PER_GENERATION;
+    cyclesLeft = MAX_FRAMES_PER_GENERATION;
+    firstCycle = true;
 
 }
 

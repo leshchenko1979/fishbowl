@@ -2,7 +2,6 @@ class Obj {
 
     constructor(x, y) {
         this.position = createVector(x, y);
-        this.size = 4;
         this.movement = createVector();
         this.deleted = false;
     }
