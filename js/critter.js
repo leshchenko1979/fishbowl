@@ -137,7 +137,12 @@ class Critter extends Obj {
 
         // activate brain
 
-        this.thought = this.brain.activate(inputs)[0] * ACTIONS % ACTIONS;
+        //this.thought = this.brain.activate(inputs)[0] * ACTIONS % ACTIONS;
+
+        //squashing the output with a logistic function
+
+        this.thought = ACTIONS/(1+Math.pow(Math.E, this.brain.activate(inputs)[0]));
+
         if (this.thought > ACTIONS) console.log("Warning - thought exceeds ACTIONS" + this.thought);
 
     }
