@@ -45,7 +45,7 @@ class Critter extends Obj {
                         this.eatenTimer += objs[i].getSize() * 1;
 
                         // disable eating on the first frame to mess up the fitness calculation
-                        if (currentGenerationDuration == 0) 
+                        if (currentGenerationDuration > 0) 
                             this.size = sqrt(sq(this.size) + sq(objs[i].getSize()));
 
                         objs[i].delete();
@@ -150,7 +150,7 @@ class Critter extends Obj {
                 this.movement = p5.Vector.random2D().mult((this.thought - 1) * 5)
             else
                 this.movement.setMag(this.movement.mag() + (this.thought - 1) * 5);
-            this.size *= 1 - 0.1 * (this.thought - 1);
+            this.size *= 1 - 0.05 * (this.thought - 1);
             return;
         }
 
@@ -160,6 +160,7 @@ class Critter extends Obj {
             
             this.size /= 2;
             
+            this.brain.clear();
             var b = this.brain.clone();
             b.mutateRandom();
             this.brain.mutateRandom();

@@ -148,12 +148,6 @@ function draw() {
 
         objs = objs.filter(el => { if (el) return true; });
 
-        // new generation
-
-        if ((--cyclesLeft / CYCLES_PER_FRAME <= 0) || (objs.filter(obj => obj instanceof Critter).length <= 1))
-            newGeneration();
-
-
         // update stats
 
         document.getElementById("frames").textContent = cyclesLeft;
@@ -162,6 +156,13 @@ function draw() {
 
         viz.data.datasets[0].data = td;
         currentGenerationDuration++;
+
+        // new generation
+
+        if ((--cyclesLeft / CYCLES_PER_FRAME <= 0) || (objs.filter(obj => obj instanceof Critter).length <= 1))
+            newGeneration();
+
+
     }
 
     //draw everything
