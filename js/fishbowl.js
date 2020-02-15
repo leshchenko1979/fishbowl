@@ -25,14 +25,13 @@ var viz, vizfit;
 
 // GA settings
 const INITIAL_PLAYER_AMOUNT = 10;
-const ITERATIONS = 1000;
 const MUTATION_RATE = 0.3;
 const ELITISM_PERCENT = 0.1;
 
 const VERBOSE = false;
 var CYCLES_PER_FRAME = 1;
-const MAX_FRAMES_PER_GENERATION = 2000;
-var cyclesLeft = MAX_FRAMES_PER_GENERATION;
+var CYCLES_PER_GENERATION = 2000;
+var cyclesLeft = CYCLES_PER_GENERATION;
 var firstCycle = true;
 
 
@@ -229,7 +228,7 @@ function newGeneration()
 
     //reset frame countdown
 
-    cyclesLeft = MAX_FRAMES_PER_GENERATION;
+    cyclesLeft = CYCLES_PER_GENERATION;
     firstCycle = true;
 
 }
