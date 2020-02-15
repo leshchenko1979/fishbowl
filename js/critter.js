@@ -45,10 +45,8 @@ class Critter extends Obj {
                         this.eatenTimer += objs[i].getSize() * 1;
 
                         // disable eating on the first frame to mess up the fitness calculation
-                        if (!firstCycle) 
+                        if (currentGenerationDuration == 0) 
                             this.size = sqrt(sq(this.size) + sq(objs[i].getSize()));
-                        else
-                            firstCycle = false;
 
                         objs[i].delete();
                     }

@@ -32,7 +32,7 @@ const VERBOSE = false;
 var CYCLES_PER_FRAME = 1;
 var CYCLES_PER_GENERATION = 2000;
 var cyclesLeft = CYCLES_PER_GENERATION;
-var firstCycle = true;
+var currentGenerationDuration = 0;
 
 
 /*
@@ -87,7 +87,7 @@ function setup() {
         data: {
             labels: [],
             datasets: [{
-                    label: "fitness",
+                    label: "Actual generation duration",
                     data: [],
                     backgroundColor: 'rgb(255, 99, 132)',
                     yAxisID: "left-y-axis"
@@ -161,6 +161,7 @@ function draw() {
         objs.filter(obj => obj instanceof Critter).forEach(obj => td[Math.floor(obj.thought)]++);
 
         viz.data.datasets[0].data = td;
+        currentGenerationDuration++;
     }
 
     //draw everything
@@ -181,8 +182,6 @@ function newGeneration()
     objs = [];
 
     neat.sort();
-
-    var maxfitness = neat.getFittest().score;
 
     newPopulation = Array(INITIAL_PLAYER_AMOUNT).fill(0);
 
@@ -215,7 +214,7 @@ function newGeneration()
     // udpate fitness viz
 
     vizfit.data.labels.push(neat.generation);
-    vizfit.data.datasets[0].data.push(maxfitness);
+    vizfit.data.datasets[0].data.push(currentGenerationDuration);
     vizfit.data.datasets[1].data.push(NNcomplexity);
     vizfit.update();
 
@@ -229,7 +228,7 @@ function newGeneration()
     //reset frame countdown
 
     cyclesLeft = CYCLES_PER_GENERATION;
-    firstCycle = true;
+    currentGenerationDuration = 0;
 
 }
 
