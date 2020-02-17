@@ -11,7 +11,7 @@ var NNcomplexity;
 const SENSES = 4;
 const ACTIONS = 5;
 
-var td = Array(ACTIONS);
+var td = Array(ACTIONS); // thought density tracking array for the viz
 
 const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
@@ -81,6 +81,8 @@ function setup() {
             }]
         }
     });
+
+    viz.data.datasets[0].data = td;
 
     vizfit = new Chart("vizfit", {
         type: "line",
@@ -154,7 +156,6 @@ function draw() {
 
         objs.filter(obj => obj instanceof Critter).forEach(obj => td[Math.floor(obj.thought)]++);
 
-        viz.data.datasets[0].data = td;
         currentGenerationDuration++;
 
         // new generation
@@ -180,7 +181,8 @@ function newGeneration()
     //evaluation
 
     objs.filter(obj => obj instanceof Critter).forEach(fish => fish.brain.score = 1);
-    objs = [];
+
+    // produce new generation 
 
     neat.sort();
 
@@ -211,7 +213,12 @@ function newGeneration()
         objs.push(o);
         o.color = i * 10;
     }
+    
+    //reset fish size stats
 
+    NNcomplexity = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length + el.connections.length), 0);
+    td.fill(0);
+    
     // udpate fitness viz
 
     vizfit.data.labels.push(neat.generation);
@@ -220,11 +227,6 @@ function newGeneration()
     vizfit.update();
 
     document.getElementById("generation").textContent = neat.generation + 1;
-
-    //reset fish size stats
-
-    NNcomplexity = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length + el.connections.length), 0);
-    td.fill(0);
 
     //reset frame countdown
 

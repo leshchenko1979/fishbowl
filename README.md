@@ -54,8 +54,16 @@ One node containing:
 - 3: turn right
 - 4: turn left
 
-## Observed evolutionary phenomena
+# Observed evolutionary phenomena
 - When the food is enough, the fish start moving in distorted circular patterns, trying to collect all the food around them. Food abundance also promts more splitting.
 - When there is less food, it is more rational for the fish to just go straight, bouncing off the walls. They also stop reproducing.
 - When the food is very scarce, the best strategy for the fish turns out to be just staying at one place and peacefully die. Since moving leads to energy/weight expenditure and given the scarcity of food, does not lead to weight increase, those fish that don't move become the fittest and survive all the moving ones.
 - It's also interesting to see how a strategy that has evolved in shorter generation durations becomes ineffective once the duration is increased, or vice versa.
+
+# Ideas for future development 
+
+## Fish growers' tournament 
+
+People should be able to upload genomes they have developed and make them compete against each other. The winner is the genome whose descendants have lived the longest. 
+
+This will probably require introduction of two new senses - the density of friendlies and the density of enemies around the current fish. 
