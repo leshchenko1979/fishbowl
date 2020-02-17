@@ -25,15 +25,18 @@
                     <canvas id="viz" width="200px" height="200px"></canvas>
                     <canvas id="vizfit" width="200px" height="200px"></canvas>
                     
-                    <p>Speed:</p>
-                    <p><input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 1" checked>x1 <input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 10"> x10</p>
-                    <p><input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 100">x100 <input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 1000">x1000</p>
+                    <p>Speed: x<span id="cpf">1</span></p>
+                    
+                    <p>
+                        <input type="button" value="<<<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+                        <input type="button" value=">>>" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+                    </p>
                     
                     <p>Generation duration:</p>
                     <p>Max. <span id="cycles">2000</span> cycles</p>
                     <p>
-                        <input type="button" value="+1000" onclick="CYCLES_PER_GENERATION += 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
                         <input type="button" value="-1000" onclick="if (CYCLES_PER_GENERATION > 1000) CYCLES_PER_GENERATION -= 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
+                        <input type="button" value="+1000" onclick="CYCLES_PER_GENERATION += 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
                     </p>
                     <p>
                         <input type="checkbox" onclick="autoDuration =! autoDuration">Automatic generation duration
@@ -41,8 +44,8 @@
 
                     <p>Food amount: <span id="food">50</span></p>
                     <p>
-                        <input type="button" value="+50" onclick="INITIAL_FOOD_AMOUNT += 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
                         <input type="button" value="-50" onclick="if (INITIAL_FOOD_AMOUNT > 50) INITIAL_FOOD_AMOUNT -= 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
+                        <input type="button" value="+50" onclick="INITIAL_FOOD_AMOUNT += 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">                        
                     </p>
 
                 </div>
