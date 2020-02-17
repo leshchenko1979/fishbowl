@@ -33,6 +33,7 @@ var CYCLES_PER_FRAME = 1;
 var CYCLES_PER_GENERATION = 2000;
 var cyclesLeft = CYCLES_PER_GENERATION;
 var currentGenerationDuration = 0;
+var autoDuration = false;
 
 
 /*
@@ -227,9 +228,22 @@ function newGeneration()
     vizfit.update();
 
     document.getElementById("generation").textContent = neat.generation + 1;
+    
+    // automatically set generation duration to the avg. of last 3 generations + 50%
+
+    if (autoDuration) {
+        const d = vizfit.data.datasets[0].data;
+        var c = 0, l = 0;
+        for (let i = max (d.length - 4, 0); i < d.length; i++) {
+            c += d[i];
+            l++;
+        }
+        CYCLES_PER_GENERATION = Math.floor(c / l * 1.5);
+        document.getElementById('cycles').textContent = CYCLES_PER_GENERATION;
+    }
 
     //reset frame countdown
-
+    
     cyclesLeft = CYCLES_PER_GENERATION;
     currentGenerationDuration = 0;
 

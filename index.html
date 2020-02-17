@@ -29,11 +29,14 @@
                     <p><input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 1" checked>x1 <input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 10"> x10</p>
                     <p><input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 100">x100 <input type="radio" name="speed" onclick="CYCLES_PER_FRAME = 1000">x1000</p>
                     
-                    <p>Generation length:</p>
-                    <p><span id="cycles">2000</span> cycles</p>
+                    <p>Generation duration:</p>
+                    <p>Max. <span id="cycles">2000</span> cycles</p>
                     <p>
                         <input type="button" value="+1000" onclick="CYCLES_PER_GENERATION += 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
                         <input type="button" value="-1000" onclick="if (CYCLES_PER_GENERATION > 1000) CYCLES_PER_GENERATION -= 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
+                    </p>
+                    <p>
+                        <input type="checkbox" onclick="autoDuration =! autoDuration">Automatic generation duration
                     </p>
 
                     <p>Food amount: <span id="food">50</span></p>
