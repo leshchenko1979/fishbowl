@@ -180,7 +180,7 @@ function newGeneration()
 
     //evaluation
 
-    objs.filter(obj => obj instanceof Critter).forEach(fish => fish.brain.score = 1);
+    objs.filter(obj => obj instanceof Critter).forEach(fish => fish.brain.score = currentGenerationDuration);
 
     // produce new generation 
 

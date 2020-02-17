@@ -115,6 +115,14 @@ class Critter extends Obj {
             }
         }
 
+        // calculate food area sensing
+        
+        var fas = 0;
+        
+        for (let x = max (Math.floor((this.position.x - 100) / FOOD_DENSITY_GRID_STEP), 0); x <= min ((this.position.x + 100) / FOOD_DENSITY_GRID_STEP, FDG_WIDTH - 1); x++)
+          for (let y = max ((Math.floor(this.position.y - 100) / FOOD_DENSITY_GRID_STEP), 0); y <= min ((this.position.y + 100) / FOOD_DENSITY_GRID_STEP, FDG_HEIGHT - 1); y++)
+              fas += foodDensity[x][y] / ((x * FOOD_DENSITY_GRID_STEP - this.position.x)^2 + (y * FOOD_DENSITY_GRID_STEP - this.position.y)^2 );
+        
         // collect inputs
 
         var inputs = [
@@ -125,13 +133,7 @@ class Critter extends Obj {
 
             this.foodVision,
 
-            // fish vision
-
-            objs.filter(obj => obj instanceof Critter)
-            .reduce((acc, el) =>
-                (acc + el.size / p5.Vector.dist(this.position, el.position)),
-                0
-            )
+            fas
 
         ];
 
@@ -196,7 +198,7 @@ class Critter extends Obj {
 
     delete() {
         super.delete();
-        this.brain.score = 0;
+        this.brain.score = currentGenerationDuration;
     }
 
     click(x, y) {

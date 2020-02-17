@@ -40,14 +40,13 @@ The fish brain uses LiquidCarrot package which is a Javascript implementation of
 - NEAT: https://www.oreilly.com/radar/neuroevolution-a-different-kind-of-deep-learning/
 
 ## Inputs of the fish brain
-- 1st node: density of food in the vicinity of the fish *(disabled for now)*
-- 2nd node: speed of the fish
-- 3rd node: size of the fish
-- 4th node: density of *food* in the line of sight of the fish
-- 5th node: density of other *fish* around the current fish
+- 1st node: speed of the fish
+- 2nd node: size of the fish
+- 3rd node: vision - density of food in the line of sight of the fish
+- 4th node: smell - density of food in the vicinity of the fish
 
 ## Outputs of the fish brain
-One node containing:
+One node containing (after being squashed with logistic function):
 - 0: do nothing
 - 1: pulse
 - 2: split
