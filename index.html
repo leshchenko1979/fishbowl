@@ -1,60 +1,111 @@
+<!doctype html>
 <html>
 
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@liquid-carrot/carrot/dist/carrot.umd2.min.js"></script>
+ 
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> 
+  <script src="https://cdn.jsdelivr.net/npm/@liquid-carrot/carrot/dist/carrot.umd2.min.js"></script>
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
-    <script src="js/obj.js"></script>
-    <script src="js/food.js"></script>
-    <script src="js/critter.js"></script>
-    <script src="js/fishbowl.js"></script>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <table>
-        <tr>
-            <td >
-                <div id="stats" style="vertical-align: top; font: 1em sans-serif;">
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+  <script src="js/obj.js"></script>
+  <script src="js/food.js"></script>
+  <script src="js/critter.js"></script>
+  <script src="js/fishbowl.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  
+  <div class="modal fade" id="options" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Options</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
 
-                    <p>Generation: <span id="generation">1</span></p>
-                    <p>Cycles left: <span id="frames"></span></p>
+<div class="container">
+        
+<div class="row">     
 
-                </div>
-                <div>
-                    <canvas id="viz" width="200px" height="200px"></canvas>
-                    <canvas id="vizfit" width="200px" height="200px"></canvas>
-                    
-                    <p>Speed: x<span id="cpf">1</span></p>
-                    
-                    <p>
-                        <input type="button" value="<<<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
-                        <input type="button" value=">>>" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
-                    </p>
-                    
-                    <p>Generation duration:</p>
-                    <p>Max. <span id="cycles">2000</span> cycles</p>
-                    <p>
-                        <input type="button" value="-1000" onclick="if (CYCLES_PER_GENERATION > 1000) CYCLES_PER_GENERATION -= 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
-                        <input type="button" value="+1000" onclick="CYCLES_PER_GENERATION += 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
-                    </p>
-                    <p>
-                        <input type="checkbox" onclick="autoDuration =! autoDuration">Automatic generation duration
-                    </p>
+<div class="card col-sm my-2">
+  <div class="card-header">Current generation</div>
+  <div class="card-body">
+    <p class="card-text">Generation no.: <span id="generation">1</span></p>
+    <p class="card-text">Cycles left: <span id="frames"></span></p>
+    <canvas id="viz" class="card-text" width="200px" height="200px"></canvas>
+  </div>
+</div>
+<div class="card col-sm my-2">
+  <div class="card-header">Simulation stats</div>
+  <div class="card-body">
+    <canvas id="vizfit" class="card-text" width="200px" height="200px"></canvas>
+  </div>
+</div>
 
-                    <p>Food amount: <span id="food">50</span></p>
-                    <p>
-                        <input type="button" value="-50" onclick="if (INITIAL_FOOD_AMOUNT > 50) INITIAL_FOOD_AMOUNT -= 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
-                        <input type="button" value="+50" onclick="INITIAL_FOOD_AMOUNT += 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">                        
-                    </p>
+</div>
 
-                </div>
-            </td   >
-            <td>
-                <div id="canvas"></div>
-            </td>
-        </tr>
-    </table>
+<div class="row">
+
+<div class="card col-md my-2">
+  <div class="card-header">Simulation speed</div>
+  <div class="card-body">
+    <p class="card-text">Current speed: x<span id="cpf">1</span></p>
+    <input type="button" class="btn btn-outline-primary" value="<<<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+    <input type="button" class="btn btn-outline-primary" value=">>>" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+  </div>
+</div>
+
+<div class="card col-md my-2 ">
+  <div class="card-header">Generation duration</div>
+  <div class="card-body">
+    <p class="card-text">Max. <span id="cycles">2000</span> cycles</p>
+    <input type="button" class="btn btn-outline-primary" value="-1000" onclick="if (CYCLES_PER_GENERATION > 1000) CYCLES_PER_GENERATION -= 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
+    <input type="button" class="btn btn-outline-primary" value="+1000" onclick="CYCLES_PER_GENERATION += 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
+    <input type="button" value="Automatic" class="btn btn-primary" data-toggle="button" onclick="autoDuration =! autoDuration">
+  </div>
+</div>
+
+<div class="card col-md my-2">
+  <div class="card-header">
+    Food amount
+  </div>
+  <div class="card-body">
+    <p class="card-text">Current food amount: <span id="food">50</span></p>
+    <p class="card-text">
+      <input type="button" class="btn btn-outline-primary" value="-50" onclick="if (INITIAL_FOOD_AMOUNT > 50) INITIAL_FOOD_AMOUNT -= 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
+      <input type="button" class="btn btn-outline-primary" value="+50" onclick="INITIAL_FOOD_AMOUNT += 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
+    </p>
+  </div>
+</div>
+
+</div>        
+</div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<div class="vw-100">
+  <div class="py-2">
+    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#options">
+        Options
+      </button>
+  </div>
+  <div class="vw-100" id="canvas"></div>
+</div>
+
+    
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 
 </html>
