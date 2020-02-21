@@ -28,26 +28,15 @@
       <div class="modal-body">
 
 <div class="container">
-        
-<div class="row">     
-
-<div class="card col-sm px-0 mx-2 my-2">
-  <div class="card-header">Current generation</div>
+  <div class="row">
+<div class="card col px-0 mx-2 my-2">
+  <div class="card-header">Stats</div>
   <div class="card-body">
-    <p class="card-text">Generation no.: <span id="generation">1</span></p>
-    <p class="card-text">Cycles left: <span id="frames"></span></p>
-    <canvas id="viz" class="card-text" width="200px" height="200px"></canvas>
+    <canvas id="viz" class="" width="200px" height="200px"></canvas>
+    <canvas id="vizfit" class="" width="200px" height="200px"></canvas>
   </div>
 </div>
-<div class="card col-sm px-0 mx-2 my-2 ">
-  <div class="card-header">Simulation stats</div>
-  <div class="card-body">
-    <canvas id="vizfit" class="card-text" width="200px" height="200px"></canvas>
-  </div>
 </div>
-
-</div>
-
 <div class="row">
 
 <div class="card col-lg px-0 mx-2 my-2">
@@ -85,7 +74,7 @@
 </div>        
 </div>
 
-      </div>
+     </div>   
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
@@ -93,14 +82,20 @@
   </div>
 </div>
   
-<div class="vw-100">
-  <div class="py-2 text-center">
-    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#options">
-        Options
-      </button>
+
+  <div id="topbar" class="text-center container-fluid vw-100">
+    <div class="row my-2">
+      <div class="col-3 py-2">Gen: <span class="badge badge-primary" id="generation">1</span></div>
+      <div class="col-5 py-2">Cycles: <span class="badge badge-primary" id="frames"></span></div>
+      <div class="col-4">
+       <button class="btn btn-outline-primary" data-toggle="modal" data-target="#options">
+         Options
+       </button>
+      </div>
+     </div>
   </div>
-  <div class="vw-100" id="canvas"></div>
-</div>
+  <div id="canvas"></div>
+
 
     
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

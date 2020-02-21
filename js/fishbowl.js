@@ -46,7 +46,7 @@ function mouseClicked() {
 */
 
 function setup() {
-    var canvas = createCanvas(windowWidth, windowHeight - 30);
+    var canvas = createCanvas(windowWidth, windowHeight - document.getElementById('topbar').offsetHeight);
     canvas.parent('canvas');
     background("gray");
     colorMode(HSB, 100);
