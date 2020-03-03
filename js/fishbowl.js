@@ -24,7 +24,7 @@ var FDG_WIDTH, FDG_HEIGHT;
 var viz, vizfit;
 
 // GA settings
-const INITIAL_PLAYER_AMOUNT = 10;
+var INITIAL_PLAYER_AMOUNT;
 const MUTATION_RATE = 0.3;
 const ELITISM_PERCENT = 0.1;
 
@@ -50,6 +50,8 @@ function setup() {
     canvas.parent('canvas');
     background("gray");
     colorMode(HSB, 100);
+
+    INITIAL_PLAYER_AMOUNT = max (round (width * height / 150000), 2);
 
     initNeat();
 
@@ -255,6 +257,8 @@ function initNeat() {
         let p = localStorage.getItem("population");
         neat = new carrot.Neat();
         neat.fromJSON(JSON.parse(p));
+        neat.resize(INITIAL_PLAYER_AMOUNT);
+
         console.log("Neural network population imported from the previous session");
         return;
     } catch (e) {
