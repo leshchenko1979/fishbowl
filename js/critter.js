@@ -164,25 +164,7 @@ class Critter extends Obj {
         // split
 
         if ((this.size > 20) && (this.thought > 2) && (this.thought <= 3)) {
-            
-            this.size /= 2;
-            
-            this.brain.clear();
-            var b = this.brain.clone();
-            b.mutateRandom();
-            this.brain.mutateRandom();
-            var critter = new Critter(this.position.x, this.position.y, b);
-            neat.resize([b]);
-
-            var v = p5.Vector.random2D();
-            v.setMag(this.movement.mag());
-            critter.setSize(this.size);
-            critter.setMovement(v);
-            critter.color = this.color;
-            objs.push(critter);
-            
-            this.movement = p5.Vector.mult(v, -1);
-            
+            this.split();
             return;
         }
 
@@ -196,6 +178,23 @@ class Critter extends Obj {
 
     }
 
+    split() {
+        this.size /= 2;
+        this.brain.clear();
+        var b = this.brain.clone();
+        b.mutateRandom();
+        this.brain.mutateRandom();
+        var critter = new Critter(this.position.x, this.position.y, b);
+        neat.resize([b]);
+        var v = p5.Vector.random2D();
+        v.setMag(this.movement.mag());
+        critter.setSize(this.size);
+        critter.setMovement(v);
+        critter.color = this.color;
+        objs.push(critter);
+        this.movement = p5.Vector.mult(v, -1);
+    }
+
     delete() {
         super.delete();
         this.brain.score = currentGenerationDuration;
@@ -203,16 +202,10 @@ class Critter extends Obj {
 
     click(x, y) {
         if (p5.Vector.dist(this.position, createVector(x, y)) < this.size) {
-            while (this.size > 5) {
-                var critter = new Critter();
-                objs.push(critter);
-                critter.setPosition(this.position);
-                var s = random() * 5;
-                critter.setSize(s);
-                this.size -= s;
+            this.split();
             }
 
-        }
     }
+    
 
 }

@@ -36,14 +36,14 @@ var currentGenerationDuration = 0;
 var autoDuration = false;
 
 
-/*
+
 function mouseClicked() {
     for (var i = 0; i < objs.length; i++) {
         if (objs[i]) objs[i].click(mouseX, mouseY);
     }
 
 }
-*/
+
 
 function setup() {
     var canvas = createCanvas(windowWidth, windowHeight - document.getElementById('topbar').offsetHeight - 22);
@@ -67,7 +67,7 @@ function setup() {
     for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
         let o = new Critter(random() * width, random() * height, neat.population[i]);
         objs.push(o);
-        o.color = i * 10;
+        o.color = i * 100 / INITIAL_PLAYER_AMOUNT;
     }
 
     // add charts
@@ -212,7 +212,7 @@ function newGeneration()
     for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
         let o = new Critter(random() * width, random() * height, neat.population[i]);
         objs.push(o);
-        o.color = i * 10;
+        o.color = i * 100 / INITIAL_PLAYER_AMOUNT;
     }
     
     //reset fish size stats
