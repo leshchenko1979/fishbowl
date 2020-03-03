@@ -56,8 +56,8 @@ function setup() {
     NNcomplexity = neat.population.reduce((acc, el) => Math.max(acc, el.nodes.length + el.connections.length), 0);
     td.fill(0);
 
-    FDG_WIDTH = ((width / FOOD_DENSITY_GRID_STEP) >> 0) + 1; // FDG = food density grid
-    FDG_HEIGHT = ((height / FOOD_DENSITY_GRID_STEP) >> 0) + 1;
+    FDG_WIDTH = (round(width / FOOD_DENSITY_GRID_STEP)) + 1; // FDG = food density grid
+    FDG_HEIGHT = (round(height / FOOD_DENSITY_GRID_STEP)) + 1;
 
     //add objects
 
