@@ -266,13 +266,14 @@ function initNeat() {
         console.log("Importing neural network population failed, creating a random one")
     };
 
-    neat = new carrot.Neat(
-        SENSES,
-        1,
-        null, {
-            population_size: INITIAL_PLAYER_AMOUNT,
-            mutation_rate: MUTATION_RATE,
-            elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT
-        }
-    );
+    resetNeat();
 }
+
+function resetNeat() {
+    neat = new carrot.Neat(SENSES, 1, null, {
+        population_size: INITIAL_PLAYER_AMOUNT,
+        mutation_rate: MUTATION_RATE,
+        elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT
+    });
+}
+
