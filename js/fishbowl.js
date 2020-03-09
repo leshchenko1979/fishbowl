@@ -8,7 +8,7 @@ var stats = [];
 var neat;
 var NNcomplexity;
 
-const SENSES = 4;
+const SENSES = 6;
 const ACTIONS = 5;
 
 var td = Array(ACTIONS); // thought density tracking array for the viz

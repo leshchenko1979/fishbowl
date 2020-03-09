@@ -115,6 +115,32 @@ class Critter extends Obj {
             }
         }
 
+/*
+
+        ## Closest food in the vision cone - angle
+        1. Define vision cone.
+        2. Filter all food that lies within the cone.
+        3. Find the closest one.
+        4. Calculate the difference between fish heading and the direction to the food.
+  */
+        var closestFoodDistance = VISION_RANGE;
+        var closestFoodAngle = Infinity;
+
+        if (this.movement.mag() > 0) {
+            objs.forEach(obj =>
+                {
+                    if (obj && obj instanceof Food) {
+                        var a = this.movement.angleBetween (createVector(obj.position.x - this.position.x, obj.position.y - this.position.y));
+                        var d = dist (this.position.x, this.position.y, obj.position.x, obj.position.y);
+                        if ((abs (a) < PI / 10) && (d < closestFoodDistance)) {
+                            closestFoodDistance = d;
+                            closestFoodAngle = a;
+                        }
+                    }
+                        
+                });
+            }
+
         // calculate food area sensing
         
         var fas = 0;
@@ -128,12 +154,11 @@ class Critter extends Obj {
         var inputs = [
 
             this.movement.mag(),
-
             this.size,
-
             this.foodVision,
-
-            fas
+            fas,
+            closestFoodDistance,
+            closestFoodAngle
 
         ];
 
