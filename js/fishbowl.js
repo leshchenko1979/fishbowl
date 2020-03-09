@@ -270,7 +270,7 @@ function initNeat() {
 }
 
 function resetNeat() {
-    neat = new carrot.Neat(SENSES, 1, null, {
+    neat = new carrot.Neat(SENSES, 2, null, {
         population_size: INITIAL_PLAYER_AMOUNT,
         mutation_rate: MUTATION_RATE,
         elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT

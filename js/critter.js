@@ -124,7 +124,7 @@ class Critter extends Obj {
         4. Calculate the difference between fish heading and the direction to the food.
   */
         var closestFoodDistance = VISION_RANGE;
-        var closestFoodAngle = Infinity;
+        var closestFoodAngle = 0;
 
         if (this.movement.mag() > 0) {
             objs.forEach(obj =>
@@ -157,18 +157,19 @@ class Critter extends Obj {
             this.size,
             this.foodVision,
             fas,
-            closestFoodDistance,
+            closestFoodDistance / VISION_RANGE,
             closestFoodAngle
 
         ];
 
         // activate brain
 
-        //this.thought = this.brain.activate(inputs)[0] * ACTIONS % ACTIONS;
-
+        var thoughts = this.brain.activate(inputs);
+        
         //squashing the output with a logistic function
 
-        this.thought = ACTIONS/(1+Math.pow(Math.E, this.brain.activate(inputs)[0]));
+        this.thought = (ACTIONS - 2)/(1 + Math.pow(Math.E, -thoughts[0]));
+        this.steering = PI / 8 / (1 + Math.pow(Math.E, -thoughts[1])) - PI / 4;
 
         if (this.thought > ACTIONS) console.log("Warning - thought exceeds ACTIONS" + this.thought);
 
@@ -177,7 +178,7 @@ class Critter extends Obj {
     act() {
 
         //pulse
-        if ((this.thought > 1) && (this.thought <= 2) && (this.movement.mag() < 2) && (this.eatenTimer <= 0)) {
+        if ((this.thought > 1) && (this.thought <= 2) && (this.movement.mag() < 2)) {
             if (this.movement.mag() == 0)
                 this.movement = p5.Vector.random2D().mult((this.thought - 1) * 5)
             else
@@ -193,13 +194,9 @@ class Critter extends Obj {
             return;
         }
 
-
         // turn
 
-        if ((this.thought > 3) && (this.thought <= 5))
-
-            this.movement.rotate((PI / 2) * (this.thought - 3) - PI / 4);
-
+        this.movement.rotate(this.steering);
 
     }
 
