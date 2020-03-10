@@ -22,71 +22,85 @@
 <div class="modal fade" id="options" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
+
       <div class="modal-header">
         <h5 class="modal-title">Options</h5>
         <button type="button" class="close" data-dismiss="modal">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
       <div class="modal-body">
 
-<div class="container">
-  <div class="row">
-    <button type="button" class="col btn btn-primary" data-dismiss="modal" onclick="resetNeat(); newGeneration();">RESET SIMULATION</button>
-  </div>  
-  
-  <div class="row">
+        <div class="container">
+          
+          <div class="row">
 
-<div class="card col px-0 mx-2 my-2">
-  <div class="card-header">
-    Stats
-  </div>
-  <div class="row">
-    <canvas id="viz" class="col-md-6" width="200px" height="200px"></canvas>
-    <canvas id="vizfit" class="col-md-6" width="200px" height="200px"></canvas>
-  </div>
-</div>
+            <div class="card col px-0 mx-2 my-2">
+              <div class="card-header">
+                Stats
+              </div>
+              <div class="row">
+                <canvas id="viz" class="col-md-6" width="200px" height="200px"></canvas>
+                <canvas id="vizfit" class="col-md-6" width="200px" height="200px"></canvas>
+              </div>
+            </div>
 
-</div>
+          </div>
 
-<div class="row">
+          <div class="row">
 
-<div class="card col-lg px-0 mx-2 my-2">
-  <div class="card-header">Simulation speed</div>
-  <div class="card-body">
-    <p class="card-text">Current speed: x<span id="cpf">1</span></p>
-    <input type="button" class="btn btn-outline-primary" value="<<<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
-    <input type="button" class="btn btn-outline-primary" value=">>>" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
-  </div>
-</div>
+            <div class="card col-lg px-0 mx-2 my-2">
+              <div class="card-header">Simulation speed</div>
+              <div class="card-body">
+                <p class="card-text">Current speed: x<span id="cpf">1</span></p>
+                <input type="button" class="btn btn-outline-primary" value="<<<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+                <input type="button" class="btn btn-outline-primary" value=">>>" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+              </div>
+            </div>
 
-<div class="card col-lg px-0 mx-2 my-2 ">
-  <div class="card-header">Generation duration</div>
-  <div class="card-body">
-    <p class="card-text">Max. <span id="cycles">2000</span> cycles</p>
-    <input type="button" class="btn btn-outline-primary" value="-1000" onclick="if (CYCLES_PER_GENERATION > 1000) CYCLES_PER_GENERATION -= 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
-    <input type="button" class="btn btn-outline-primary" value="+1000" onclick="CYCLES_PER_GENERATION += 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
-    <input type="button" value="Automatic" class="btn btn-primary" data-toggle="button" onclick="autoDuration =! autoDuration">
-  </div>
-</div>
+            <div class="card col-lg px-0 mx-2 my-2 ">
+              <div class="card-header">Generation duration</div>
+              <div class="card-body">
+                <p class="card-text">Max. <span id="cycles">2000</span> cycles</p>
+                <input type="button" class="btn btn-outline-primary" value="-1000" onclick="if (CYCLES_PER_GENERATION > 1000) CYCLES_PER_GENERATION -= 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
+                <input type="button" class="btn btn-outline-primary" value="+1000" onclick="CYCLES_PER_GENERATION += 1000; document.getElementById('cycles').textContent=CYCLES_PER_GENERATION">
+                <div class="form-check">
+                  <input type="checkbox" value="Automatic" class="form-check-input" onclick="autoDuration =! autoDuration">
+                  <label for="Automatic" class="form-check-label">Automatic duration</label>
+                </div>
+              </div>
+            </div>
 
-<div class="card col-lg px-0 mx-2 my-2">
-  <div class="card-header">
-    Food amount
-  </div>
-  <div class="card-body">
-    <p class="card-text">Current food amount: <span id="food">50</span></p>
-    <p class="card-text">
-      <input type="button" class="btn btn-outline-primary" value="-50" onclick="if (INITIAL_FOOD_AMOUNT > 50) INITIAL_FOOD_AMOUNT -= 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
-      <input type="button" class="btn btn-outline-primary" value="+50" onclick="INITIAL_FOOD_AMOUNT += 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
-    </p>
-  </div>
-</div>
+            <div class="card col-lg px-0 mx-2 my-2">
+              <div class="card-header">
+                Food amount
+              </div>
+              <div class="card-body">
+                <p class="card-text">Current food amount: <span id="food">50</span></p>
+                <p class="card-text">
+                  <input type="button" class="btn btn-outline-primary" value="-50" onclick="if (INITIAL_FOOD_AMOUNT > 50) INITIAL_FOOD_AMOUNT -= 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
+                  <input type="button" class="btn btn-outline-primary" value="+50" onclick="INITIAL_FOOD_AMOUNT += 50; document.getElementById('food').textContent=INITIAL_FOOD_AMOUNT">
+                </p>
+              </div>
+            </div>
 
-</div>        
-</div>
+          </div> 
 
-     </div>   
+          <div class="row">
+            <div class="col form-check">
+              <input type="checkbox" onclick="VERBOSE =! VERBOSE" name="verbose" class="form-check-input">
+              <label for="verbose" class="form-check-label">Debug info</label>
+            </div>
+            <button type="button" class="col btn btn-warning" data-dismiss="modal" onclick="resetNeat(); newGeneration(); document.location.reload();">RESET SIMULATION</button>
+
+          </div>
+
+
+        </div>
+
+
+      </div>   
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
@@ -97,9 +111,13 @@
 
   <div id="topbar" class="text-center container-fluid vw-100">
     <div class="row my-2">
-      <div class="col-3 py-2">Gen: <span class="badge badge-primary" id="generation">1</span></div>
-      <div class="col-5 py-2">Cycles: <span class="badge badge-primary" id="frames"></span></div>
-      <div class="col-4">
+      <div class="col py-2 d-none d-md-block">Gen: <span class="badge badge-primary" id="generation">1</span></div>
+      <div class="col py-2">Cycles: <span class="badge badge-primary" id="frames"></span></div>
+      <div class="col">
+        <input type="button" class="btn btn-outline-primary" value="<<<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+        <input type="button" class="btn btn-outline-primary" value=">>>" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+      </div>
+      <div class="col">
        <button class="btn btn-outline-primary" data-toggle="modal" data-target="#options">
          Options
        </button>

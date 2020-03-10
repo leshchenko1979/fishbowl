@@ -17,8 +17,11 @@ class Critter extends Obj {
         fill(color(this.color, 50, 70));
         super.draw();
         if (VERBOSE) {
-            fill("black");
-            text(round(this.foodVision * 100), this.position.x, this.position.y);
+            let v = p5.Vector.fromAngle (this.movement.heading() + this.closestFoodAngle, this.closestFoodDistance);
+            v = v.add(this.position);
+            line(this.position.x, this.position.y, v.x, v.y);
+ //           fill("black");
+ //           text(this.closestFoodAngle, this.position.x, this.position.y);
         }
     }
 
@@ -70,7 +73,7 @@ class Critter extends Obj {
     think() {
 
         // calculate food vision
-
+/*
         this.foodVision = 0;
 
         if (this.movement.mag() > 0) {
@@ -114,7 +117,7 @@ class Critter extends Obj {
                 }
             }
         }
-
+*/
 /*
 
         ## Closest food in the vision cone - angle
@@ -123,18 +126,20 @@ class Critter extends Obj {
         3. Find the closest one.
         4. Calculate the difference between fish heading and the direction to the food.
   */
-        var closestFoodDistance = VISION_RANGE;
-        var closestFoodAngle = 0;
+        this.closestFoodDistance = VISION_RANGE;
+        this.closestFoodAngle = 0;
 
         if (this.movement.mag() > 0) {
             objs.forEach(obj =>
                 {
                     if (obj && obj instanceof Food) {
                         var a = this.movement.angleBetween (createVector(obj.position.x - this.position.x, obj.position.y - this.position.y));
-                        var d = dist (this.position.x, this.position.y, obj.position.x, obj.position.y);
-                        if ((abs (a) < PI / 10) && (d < closestFoodDistance)) {
-                            closestFoodDistance = d;
-                            closestFoodAngle = a;
+                        if ((abs (a) < PI / 4)) {
+                            var d = dist (this.position.x, this.position.y, obj.position.x, obj.position.y);
+                            if (d < this.closestFoodDistance) {
+                                this.closestFoodDistance = d;
+                                this.closestFoodAngle = a;
+                            }
                         }
                     }
                         
@@ -154,11 +159,11 @@ class Critter extends Obj {
         var inputs = [
 
             this.movement.mag(),
-            this.size,
-            this.foodVision,
+//            this.size,
+           // this.foodVision,
             fas,
-            closestFoodDistance / VISION_RANGE,
-            closestFoodAngle
+            this.closestFoodDistance / VISION_RANGE,
+            this.closestFoodAngle
 
         ];
 
@@ -168,35 +173,39 @@ class Critter extends Obj {
         
         //squashing the output with a logistic function
 
-        this.thought = (ACTIONS - 2)/(1 + Math.pow(Math.E, -thoughts[0]));
-        this.steering = PI / 8 / (1 + Math.pow(Math.E, -thoughts[1])) - PI / 4;
+//        this.thought = (ACTIONS - 2) / (1 + Math.pow(Math.E, -thoughts[0]));
+        this.thought = PI / 4 / (1 + Math.pow(Math.E, -thoughts[0])) - PI / 8;
 
-        if (this.thought > ACTIONS) console.log("Warning - thought exceeds ACTIONS" + this.thought);
+//        if (this.thought > ACTIONS) console.log("Warning - thought exceeds ACTIONS" + this.thought);
 
     }
 
     act() {
 
         //pulse
-        if ((this.thought > 1) && (this.thought <= 2) && (this.movement.mag() < 2)) {
+        if (
+            //(this.thought > 1) && (this.thought <= 2) && 
+            (this.movement.mag() < 2)) {
             if (this.movement.mag() == 0)
-                this.movement = p5.Vector.random2D().mult((this.thought - 1) * 5)
+                this.movement = p5.Vector.random2D().mult(5)
             else
-                this.movement.setMag(this.movement.mag() + (this.thought - 1) * 5);
-            this.size *= 1 - 0.05 * (this.thought - 1);
+                this.movement.setMag(this.movement.mag() + 5);
+            // this.size *= 1 - 0.05 * (this.thought - 1);
             return;
         }
 
         // split
 
-        if ((this.size > 20) && (this.thought > 2) && (this.thought <= 3)) {
+        if ((this.size > 20)
+        // && (this.thought > 2) && (this.thought <= 3)
+        ) {
             this.split();
             return;
         }
 
         // turn
 
-        this.movement.rotate(this.steering);
+        this.movement.rotate(this.thought);
 
     }
 

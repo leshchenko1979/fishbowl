@@ -8,10 +8,10 @@ var stats = [];
 var neat;
 var NNcomplexity;
 
-const SENSES = 6;
-const ACTIONS = 5;
+const SENSES = 4;
+//const ACTIONS = 2;
 
-var td = Array(ACTIONS); // thought density tracking array for the viz
+var td = Array(21); // thought density tracking array for the viz
 
 const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
@@ -28,7 +28,7 @@ var INITIAL_PLAYER_AMOUNT;
 const MUTATION_RATE = 0.3;
 const ELITISM_PERCENT = 0.1;
 
-const VERBOSE = false;
+var VERBOSE = false;
 var CYCLES_PER_FRAME = 1;
 var CYCLES_PER_GENERATION = 2000;
 var cyclesLeft = CYCLES_PER_GENERATION;
@@ -73,13 +73,15 @@ function setup() {
     }
 
     // add charts
-
+    var l = Array(21).fill(0);
+    l = l.map ((v, i) => i * 10 - 100);
+    
     viz = new Chart("viz", {
         type: "horizontalBar",
         data: {
-            labels: ['stay', 'pulse', 'split', "left", "right"],
+            labels: l,
             datasets: [{
-                label: "action distribution",
+                label: "steering distribution, %",
                 data: td
             }]
         }
@@ -157,7 +159,7 @@ function draw() {
 
         document.getElementById("frames").textContent = cyclesLeft;
 
-        objs.filter(obj => obj instanceof Critter).forEach(obj => td[Math.floor(obj.thought)]++);
+        objs.filter(obj => obj instanceof Critter).forEach(obj => td[Math.floor((obj.thought + PI / 8) / (PI / 4) * 20)]++);
 
         currentGenerationDuration++;
 
@@ -270,7 +272,7 @@ function initNeat() {
 }
 
 function resetNeat() {
-    neat = new carrot.Neat(SENSES, 2, null, {
+    neat = new carrot.Neat(SENSES, 1, null, {
         population_size: INITIAL_PLAYER_AMOUNT,
         mutation_rate: MUTATION_RATE,
         elitism: ELITISM_PERCENT * INITIAL_PLAYER_AMOUNT
