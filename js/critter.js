@@ -52,6 +52,8 @@ class Critter extends Obj {
                             this.size = sqrt(sq(this.size) + sq(objs[i].getSize()));
 
                         objs[i].delete();
+                        if (TRAINING_VISION)
+                            this.brain.score++;
                     }
                 }
             }
@@ -185,12 +187,12 @@ class Critter extends Obj {
         //pulse
         if (
             //(this.thought > 1) && (this.thought <= 2) && 
-            (this.movement.mag() < 2)) {
+            (this.movement.mag() < FISH_PULSE_THRESHOLD)) {
             if (this.movement.mag() == 0)
-                this.movement = p5.Vector.random2D().mult(5)
+                this.movement = p5.Vector.random2D().mult(FISH_PULSE_VELOCITY)
             else
-                this.movement.setMag(this.movement.mag() + 5);
-            // this.size *= 1 - 0.05 * (this.thought - 1);
+                this.movement.setMag(this.movement.mag() + FISH_PULSE_VELOCITY);
+            this.size *= 1 - 0.02;
             return;
         }
 

@@ -88,11 +88,17 @@
           </div> 
 
           <div class="row">
-            <div class="col form-check">
-              <input type="checkbox" onclick="VERBOSE =! VERBOSE" name="verbose" class="form-check-input">
-              <label for="verbose" class="form-check-label">Debug info</label>
+            <div class="col">
+              <div class="form-check">
+                <input type="checkbox" onclick="VERBOSE =! VERBOSE" name="verbose" class="form-check-input">
+                <label for="verbose" class="form-check-label">Debug info</label>
+              </div>
+              <div class="form-check">
+                <input type="checkbox" onclick="TRAINING_VISION =! TRAINING_VISION; newGeneration();" data-dismiss="modal" name="vision_training" class="form-check-input">
+                <label for="vision_training" class="form-check-label">Vision training mode</label>
+              </div>
             </div>
-            <button type="button" class="col btn btn-warning" data-dismiss="modal" onclick="resetNeat(); newGeneration(); document.location.reload();">RESET SIMULATION</button>
+            <button type="button" class="col btn btn-danger" data-dismiss="modal" onclick="resetNeat(); newGeneration(); document.location.reload();">RESET SIMULATION</button>
 
           </div>
 

@@ -15,6 +15,9 @@ var td = Array(21); // thought density tracking array for the viz
 
 const FOOD_DENSITY_GRID_STEP = 20;
 const FOOD_DENSITY_THRESHOLD = 20;
+
+const FISH_PULSE_THRESHOLD = 0.5;
+const FISH_PULSE_VELOCITY = 0.5;
 const VISION_RANGE = 200;
 
 var INITIAL_FOOD_AMOUNT = 50;
@@ -29,6 +32,7 @@ const MUTATION_RATE = 0.3;
 const ELITISM_PERCENT = 0.1;
 
 var VERBOSE = false;
+var TRAINING_VISION = false;
 var CYCLES_PER_FRAME = 1;
 var CYCLES_PER_GENERATION = 2000;
 var cyclesLeft = CYCLES_PER_GENERATION;
@@ -63,14 +67,7 @@ function setup() {
 
     //add objects
 
-    for (var i = 0; i < INITIAL_FOOD_AMOUNT; i++)
-        objs.push(new Food(random() * width, random() * height));
-
-    for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
-        let o = new Critter(random() * width, random() * height, neat.population[i]);
-        objs.push(o);
-        o.color = i * 100 / INITIAL_PLAYER_AMOUNT;
-    }
+    addObjects();
 
     // add charts
     var l = Array(21).fill(0);
@@ -124,6 +121,28 @@ function setup() {
 
 }
 
+function addObjects() {
+    if (!TRAINING_VISION) {
+        for (var i = 0; i < INITIAL_FOOD_AMOUNT; i++)
+            objs.push(new Food(random() * width, random() * height));
+        for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
+            let o = new Critter(random() * width, random() * height, neat.population[i]);
+            objs.push(o);
+            o.color = i * 100 / INITIAL_PLAYER_AMOUNT;
+        } 
+    } else {
+        objs.push(new Food(round(width / 2) + 50, round(height / 2 + random() * 100 - 50)));
+        for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
+            let o = new Critter(round(width / 2) - 50, height / 2, neat.population[i]);
+            objs.push(o);
+            o.color = i * 100 / INITIAL_PLAYER_AMOUNT;
+            o.size = 10;
+            o.movement.x = 1;
+            neat.population[i].score = 0;
+        } 
+    }
+}
+
 function draw() {
 
     for (var cycle = 0; cycle < CYCLES_PER_FRAME; cycle++) {
@@ -173,7 +192,7 @@ function draw() {
 
     //draw everything
 
-    background("gray");
+    background(TRAINING_VISION ? "yellow" : "gray");
     objs.forEach(obj => obj.draw())
     viz.update();
 
@@ -185,7 +204,8 @@ function newGeneration()
 
     //evaluation
 
-    objs.filter(obj => obj instanceof Critter).forEach(fish => fish.brain.score = currentGenerationDuration);
+    if (!TRAINING_VISION)
+        objs.filter(obj => obj instanceof Critter).forEach(fish => fish.brain.score = currentGenerationDuration);
 
     // produce new generation 
 
@@ -206,18 +226,7 @@ function newGeneration()
 
     objs = [];
 
-    //create new food
-
-    for (var i = 0; i < INITIAL_FOOD_AMOUNT; i++)
-        objs.push(new Food(random() * width, random() * height));
-
-    // create new fish
-
-    for (i = 0; i < INITIAL_PLAYER_AMOUNT; i++) {
-        let o = new Critter(random() * width, random() * height, neat.population[i]);
-        objs.push(o);
-        o.color = i * 100 / INITIAL_PLAYER_AMOUNT;
-    }
+    addObjects();
     
     //reset fish size stats
 
@@ -235,20 +244,24 @@ function newGeneration()
     
     // automatically set generation duration to the avg. of last 3 generations + 50%
 
-    if (autoDuration) {
-        const d = vizfit.data.datasets[0].data;
-        var c = 0, l = 0;
-        for (let i = max (d.length - 4, 0); i < d.length; i++) {
-            c += d[i];
-            l++;
+    if (TRAINING_VISION)
+        cyclesLeft = 200
+    else {
+        if (autoDuration) {
+            const d = vizfit.data.datasets[0].data;
+            var c = 0, l = 0;
+            for (let i = max (d.length - 4, 0); i < d.length; i++) {
+                c += d[i];
+                l++;
+            }
+            CYCLES_PER_GENERATION = Math.floor(c / l * 1.5);
+            document.getElementById('cycles').textContent = CYCLES_PER_GENERATION;
         }
-        CYCLES_PER_GENERATION = Math.floor(c / l * 1.5);
-        document.getElementById('cycles').textContent = CYCLES_PER_GENERATION;
+        cyclesLeft = CYCLES_PER_GENERATION;
     }
 
     //reset frame countdown
     
-    cyclesLeft = CYCLES_PER_GENERATION;
     currentGenerationDuration = 0;
 
 }
