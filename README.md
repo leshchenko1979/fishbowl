@@ -30,7 +30,8 @@ You can witness the changes in the fish behaivor as the neural network evolves. 
 - Genome is stored in the browser cache to allow for restoring the evolution from where it stopped when the browser was reloaded.
 - Statistics (distribution of neural network responses, complexity of the neural network and generation durations) are displayed.
 - You can adjust the simulation speed, maximum generation duration and initial amount of food.
-- Vision training mode - simplified environment conditions to speed up vision / movement coordination of the fish
+- Vision training mode - simplified environment conditions to speed up vision / steering coordination of the fish
+- Load pretrained network - a brain that already learned to steer the fish towards the closest food piece
 
 # How the fish brain works
 
