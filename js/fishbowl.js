@@ -55,7 +55,7 @@ function setup() {
     background("gray");
     colorMode(HSB, 100);
 
-    INITIAL_PLAYER_AMOUNT = max (round (width * height / 150000), 2);
+    INITIAL_PLAYER_AMOUNT = max (round (width * height / 150000), 3);
 
     initNeat();
 

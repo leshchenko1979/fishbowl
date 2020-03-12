@@ -120,8 +120,8 @@
       <div class="col py-2 d-none d-md-block">Gen: <span class="badge badge-primary" id="generation">1</span></div>
       <div class="col py-2">Cycles: <span class="badge badge-primary" id="frames"></span></div>
       <div class="col">
-        <input type="button" class="btn btn-outline-primary" value="<<<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
-        <input type="button" class="btn btn-outline-primary" value=">>>" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+        <input type="button" class="btn btn-outline-primary" value="<" onclick="if (CYCLES_PER_FRAME > 1) CYCLES_PER_FRAME /= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
+        <input type="button" class="btn btn-outline-primary" value=">" onclick="if (CYCLES_PER_FRAME < 1000) CYCLES_PER_FRAME *= 10; document.getElementById('cpf').textContent=CYCLES_PER_FRAME">
       </div>
       <div class="col">
        <button class="btn btn-outline-primary" data-toggle="modal" data-target="#options">
